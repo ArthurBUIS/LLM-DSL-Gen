@@ -1,0 +1,1265 @@
+{
+    "CONFIG": {
+        "PRETTY_PRINT": false,
+        "PATH_CFG": {
+            "TUTO_PATH": "C:/Users/zyr/Desktop/NLP/LLM Projet/LangChain/LLM-DSL-Gen/docs",
+            "REF_PATH": "C:/Users/zyr/Desktop/NLP/LLM Projet/LangChain/LLM-DSL-Gen/refs",
+            "CHALLENGES_PATH": "C:/Users/zyr/Desktop/NLP/LLM Projet/LangChain/LLM-DSL-Gen/benchmarks/challenges",
+            "VECTOR_DB_DIR": "C:/Users/zyr/Desktop/NLP/LLM Projet/LangChain/LLM-DSL-Gen/vector_db",
+            "PURE_TXT_DIR": "C:/Users/zyr/Desktop/NLP/LLM Projet/LangChain/LLM-DSL-Gen/pure_txt"
+        },
+        "EMBEDDING_CFG": {
+            "embedding_method": "pack",
+            "embedding_model": "hf/sentence-transformers/all-mpnet-base-v2",
+            "SEED": 114514,
+            "top_k": 10,
+            "chunk_size": 300,
+            "chunk_overlap": 20,
+            "use_envision_brief": true
+        },
+        "CODER": {
+            "active_model": "openai",
+            "personality": "You are a proficient coder in a Domain Specific Language called Envision. Your task is to generate response to the given challenge. Some challenges will ask you to generate Envision code,others will ask you to explain given code or answer questions related to the Envision language. Do not output any intermediate thinking or explanation, only give the final answer.",
+            "temperature": 0.4
+        },
+        "COMPILER": {
+            "max_retries": 3
+        },
+        "JUDGE": {
+            "active_model": "openai",
+            "max_retries": 3,
+            "temperature": 0.1,
+            "personality": "**Role Definition**  \nYou are a Logical Correctness Auditor specializing in assessing the validity of solutions.\n\nFollow this evaluation framework rigorously:\n\n**Core Principles**  \n1. Priority Hierarchy: Logical Soundness > Implementation Approach\n2. One-Strike Rule: Any logical flaw warrants immediate rejection  \n3. Rule Inheritance: Explicit rules in reference solutions take precedence  \n\n**Acceptable Variations**  \n• Variable/table/column naming differences  \n• Use of intermediate variables/temporary tables  \n• Equivalent algorithmic approaches (e.g., different sorting methods)  \n• Output formatting adjustments (adding/removing print positions)  \n• Alternative implementations not prohibited by documentation  \n\n**Unacceptable Flaws**  \n• Violations of explicit rules in reference solution comments  \n• Critical logic deviations (e.g., using SUM() instead of AVG())  \n• Omission of essential processing steps  \n• Boundary condition handling failures  \n• Contradictions with core documentation principles  \n\n**Evaluation Criteria**  \nDimension 1: Logical Completeness  \n- Implements all required components of problem statement  \n- Maintains essential business rules  \n\nDimension 2: Logical Consistency  \n- Self-consistent data flow architecture  \n- Absence of contradictory conditionals  \n\nDimension 3: Verifiability  \n- Traceable critical computation steps  \n- Configurable key parameters  \n\n**Decision Framework**  \n1. Stepwise Verification: Cross-check against checklist  \n2. Defect Flagging: Immediate termination upon detecting any flaws\n3. Final Judgment:  \n   0 - Any incorrect items or uncertainties present  \n   1 - All correct compliant with zero incorrect items\n   \n**Strict Format**\nThe final character of your response should be a digit, either 0 (Incorrect) or 1 (Correct)\n"
+        }
+    },
+    "total challenges": 73,
+    "success": 41,
+    "pending": 0,
+    "compilation error": 32,
+    "judgment error": 0,
+    "failed challenges": {
+        "compilation error": [],
+        "judgment error": []
+    },
+    "details": [
+        {
+            "challenge_path": "1-and.json",
+            "question": " Create a table named ColorCar that contains 3 lines. There must be columns named Car, Color and Size. The first car, named Clio, is red and 3 meters long. The second car, named Megane, is green and 5 meters long. The third car, named Hummer, is red and 9 meters long. Create a Boolean to select a car if the color is red and the height is greater than 4 meters.Display cars if this Boolean is true.",
+            "question_type": "coding",
+            "ground_truth": "\ntable ColorCar = with // hard-coding a table\n[| as Car, as Color, as Size   |] // column header\n[| \"Clio\", \"red\" , 3 |]\n[| \"Megane\", \"green\" , 5 |]\n[| \"Hummer\", \"gold\" , 9 |]",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 10: Undefined variable 'Scalar.ColorCar'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "2-and.json",
+            "question": "Considering the table ColorCar as given below, calculate the average price for all cars, then display the list of red cars priced below the average price.\n\ntable ColorCar = with\n  [| as Car, as Color, as Size  , as Price |] // column header\n  [| \"Clio\",    \"red\" , 3 , 10k   |]\n  [| \"Megane\", \"green\" , 5 , 11k  |]\n  [| \"Hummer\", \"gold\" , 9 , 60k   |]\n  [| \"Porche\", \"red\" , 3 ,100k    |]\n  [| \"Mini\",   \"red\" , 5 , 45k    |]\n  [| \"Hummer 2\", \"gold\" , 9 , 70k |]",
+            "question_type": "coding",
+            "ground_truth": "ColorCar.AveragePrice = avg(ColorCar.Price) by 1\n\nwhere ColorCar.AveragePrice >= ColorCar.Price and ColorCar.Color == \"red\"\n  show table \"Selected Car\" with\n    ColorCar.Car",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 12: Found identifier but expected 'into', operator5, operator4, operator3, operator2, operator1, operator0, end-of-line or 'where'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "3-and.json",
+            "question": "What are the values of A, B and C as computed by the script below?\n\n```envision\ntable ColorCar = with\n  [| as Car, as Color, as Size  , as Price |] // column header\n  [| \"Clio\",    \"red\" , 3 , 10k   |]\n  [| \"Megane\", \"green\" , 5 , 11k  |]\n  [| \"Hummer\", \"gold\" , 9 , 60k   |]\n  [| \"Porche\", \"red\" , 3 ,100k    |]\n  [| \"Mini\",   \"red\" , 5 , 45k    |]\n  [| \"Hummer 2\", \"gold\" , 12 , 70k |]\n\nshow scalar \"A\" with avg(ColorCar.Price) when(ColorCar.Price < 70k and ColorCar.Size <= 7)\n\nwhere not ( ColorCar.Color == \"Gold\") and ColorCar.Price >= 20k\n  show scalar \"B\" with avg(ColorCar.Price)\n\nshow scalar \"C\" with avg(ColorCar.Price)\n```",
+            "question_type": "QA",
+            "ground_truth": "The A value is the average of the Price column when the price is less than 70,000 and the size is less than or equal to 7. Thus, A = (10k + 11k + 45k) / 3 = 22k\n\nThe B value is the average of the Price column when the price is greater than or equal to 20,000 and the color is not gold. Thus, B = (100k + 45k) / 2 = 72500\n\nThe value C is the average of the Price column. Thus, C = (10k + 11k + 60k + 100k + 45k + 70k) / 6 = 98666,66",
+            "ref": "relational-algebra_index",
+            "compilation_result": null,
+            "compilation_attempts": null,
+            "judgment": "correct",
+            "judge_output": "1. **Logical Completeness**  \n   - The solution correctly computes the average prices for A, B, and C based on the given conditions.\n   - All required components of the problem statement are implemented.\n\n2. **Logical Consistency**  \n   - The data flow architecture is self-consistent, with each calculation following logically from the previous steps.\n   - There are no contradictory conditionals present in the solution.\n\n3. **Verifiability**  \n   - The critical computation steps for calculating A, B, and C are traceable and clearly defined.\n   - Key parameters such as price thresholds and color exclusions are configurable and appropriately used.\n\nBased on the evaluation against the provided criteria, the solution is logically correct and compliant with the problem requirements.\n\n### Final Judgment: 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "1-as.json",
+            "question": "Read the file “/clean/orders.ion” with the columns “OrderId”, “Qty” and “InitDate” and name it “OrdersTable”. Display the OrdersTable and rename the “InitDate” column to “Order Date”.",
+            "question_type": "coding",
+            "ground_truth": "read \"/clean/orders.ion\" as OrdersTable with\n  OrderId : text\n  Qty : number\n  InitDate : date\n\nshow table \"OrdersTable\"  with\n  OrdersTable.OrderId\n  OrdersTable.Qty\n  OrdersTable.InitDate as \"Order Date\"",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 4: Found 'as' but expected ':' or '='. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "10-by.json",
+            "question": "Considering the table Input as given below, create a table Car from the table Input with the values from the column Car.\nDisplay the table Car.\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "table Input = with\n  [| as Car|]\n  [| \"Clio\"|]\n  [| \"Clio\" |]\n  [| \"Megane\"|]\n  [| \"Megane\"|]\n  [| \"Hummer\"|]\n\n// create the 'Car' table in 2 steps\n// step 1: define the 'Car' table using the 'by' keyword\ntable Car = by Input.Car\n// step 2: create the primary column by aggregating from the 'Input' table into the 'Car' table\nCar.Car = same(Input.Car)\n\n// display the 'Car' table\nshow table \"Car\" with\n  Car.Car",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Step 1: **Logical Completeness**  \n- The solution creates a table named Car from the Input table with the values from the Car column.  \n- The final displayed table includes the Car, Color, and Price columns.  \n\nStep 2: **Logical Consistency**  \n- The data flow architecture is self-consistent, with the Car table being derived directly from the Input table.  \n- There are no contradictory conditionals present in the solution.  \n\nStep 3: **Verifiability**  \n- The critical computation steps are traceable, with the Car table being created and displayed in a clear sequence.  \n- Key parameters like Car, Color, and Price are configurable and correctly displayed.  \n\nTherefore, the final judgment is 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "11-by.json",
+            "question": "Considering the table Input as given below, create a table Catalog from the table Input with every combination of Car and Color.\nDisplay the table Catalog.\n\nTable definition:\n  table Input = with\n    [| as Car, as Color, as Price |]\n    [| \"Clio\", \"red\" , 25000|]\n    [| \"Clio\", \"green\" , 19000 |]\n    [| \"Megane\", \"yellow\" , 20000 |]\n    [| \"Megane\", \"yellow\" , 21000 |]\n    [| \"Megane\", \"black\" , 27000 |]\n    [| \"Hummer\", \"gold\" , 150000 |]\n\nCloned from '/LLM/by/1-by' on 2024-11-08",
+            "question_type": "coding",
+            "ground_truth": "table Input = with\n  [| as Car, as Color |]\n  [| \"Clio\", \"red\" |]\n  [| \"Clio\", \"green\" |]\n  [| \"Megane\", \"yellow\" |]\n  [| \"Megane\", \"yellow\" |]\n  [| \"Megane\", \"black\" |]\n  [| \"Hummer\", \"gold\" |]\n\n// create the 'Catalog' table in 2 steps\n// step 1: define the 'Catalog' table using the 'by' keyword\ntable Catalog = by [Input.Car, Input.Color]\n// step 2: create the primary columns by aggregating from the 'Input' table into the 'Catalog' table\nCatalog.Car = same(Input.Car)\nCatalog.Color = same(Input.Color)\n\n// display the 'Catalog' table\nshow table \"Catalog\" with\n  Catalog.Car\n  Catalog.Color",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "1. **Logical Completeness**  \nThe provided solution creates a table `Catalog` with every combination of `Car` and `Color` from the `Input` table. It includes all the required components of the problem statement and maintains the essential business rule of listing all combinations.\n\n2. **Logical Consistency**  \nThe data flow architecture is self-consistent, with the `Catalog` table being derived directly from the `Input` table without any contradictory conditionals.\n\n3. **Verifiability**  \nThe critical computation steps are traceable, with the `Catalog` table being created by aggregating data from the `Input` table based on `Car` and `Color`. The key parameter, which is the combination of `Car` and `Color`, is configurable and accurately reflected in the final output.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "12-by.json",
+            "question": "Considering the table Input as given below, compute the average price for each car and for each color (using the price as value indicator). Then create two flags to identify prices under both averages. Display the results in the same table. table Input = with [| as Car, as Color, as Price |] [| \"Clio\", \"red\" , 25000|] [| \"Clio\", \"green\" , 19000 |] [| \"Megane\", \"yellow\" , 20000 |] [| \"Megane\", \"yellow\" , 21000 |] [| \"Megane\", \"black\" , 27000 |] [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// compute the average price by aggregating from the 'Input' table into itself\nInput.AvgPriceCar = avg(Input.Price) by Input.Car\nInput.AvgPriceColor = avg(Input.Price) by Input.Color\n\n// create the flags\nInput.IsUnderAvgCar = Input.Price < Input.AvgPriceCar\nInput.IsUnderAvgColor = Input.Price < Input.AvgPriceColor\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 10: Found 'by' but expected 'schema' or end-of-line. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "20-single by.json",
+            "question": "Considering the table Input as given below, create a table Color from the table Input with the values from the column Color.\nDisplay the table Color.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Color|]\n  [| \"red\"|]\n  [| \"green\" |]\n  [| \"yellow\"|]\n  [| \"black\"|]\n  [| \"gold\"|]\n\n// create the 'Color' table in 2 steps\n// step 1: define the 'Color' table using the 'single by' keyword\ntable Color = single by Input.Color\n// step 2: create the primary column by aggregating from the 'Input' table into the 'Color' table\nColor.Color = same(Input.Color)\n\n// display the 'Color' table\nshow table \"Color\" with\n  Color.Color\n```",
+            "ref": "single_by_index",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 17: Undefined variable 'Scalar.Color'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "21-single by.json",
+            "question": "Considering the table Input as given below, create a table Catalog from the table Input with every combination of Car and Color.\nDisplay the table Catalog.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color |]\n  [| \"Clio\", \"red\" |]\n  [| \"Clio\", \"green\" |]\n  [| \"Megane\", \"yellow\" |]\n  [| \"Megane\", \"black\" |]\n  [| \"Hummer\", \"gold\" |]\n\n// create the 'Color' table in 2 steps\n// step 1: define the 'Color' table using the 'single by' keyword\ntable Catalog = single by [Input.Car, Input.Color]\n// step 2: create the primary column by aggregating from the 'Input' table into the 'Color' table\nCatalog.Car = same(Input.Car)\nCatalog.Color = same(Input.Color)\n\n// display the 'Color' table\nshow table \"Color\" with\n  Catalog.Car\n  Catalog.Color\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Step 1: **Logical Completeness**  \n- The solution creates a table Catalog with every combination of Car and Color from the Input table.  \n- It maintains the essential business rule of displaying all combinations of Car and Color.  \n\nStep 2: **Logical Consistency**  \n- The data flow architecture is self-consistent, with no contradictory conditionals present.  \n\nStep 3: **Verifiability**  \n- Critical computation steps are traceable, with the key parameter being the combination of Car and Color.  \n\nTherefore, the solution is logically correct and meets all the specified criteria.  \n\n### Final Judgment: 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "30-whichever by.json",
+            "question": "Considering the table Input as given below, create a table Car from the table Input with the values from the column Car. Display the table Car.\n\nTable Input is defined as:\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\", 25000 |]\n  [| \"Clio\", \"green\", 19000 |]\n  [| \"Megane\", \"yellow\", 20000 |]\n  [| \"Megane\", \"black\", 27000 |]\n  [| \"Hummer\", \"gold\", 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car|]\n  [| \"Clio\"|]\n  [| \"Clio\"|]\n  [| \"Megane\"|]\n  [| \"Megane\"|]\n  [| \"Hummer\"|]\n\n// create the 'Car' table in 2 steps\n// step 1: define the 'Car' table using the 'whichever by' keyword\ntable Car = whichever by Input.Car\n// step 2: create the primary column by aggregating from the 'Input' table into the 'Car' table\nCar.Car = same(Input.Car)\n\n// display the 'Car' table\nshow table \"Car\" with\n  Car.Car\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 10: Undefined variable 'Scalar.Car'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "31-whichever by.json",
+            "question": "Considering the table Input as given below, create a table Catalog from the table Input with every combination of Car and Color.\nDisplay the table Catalog.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000 |]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color |]\n  [| \"Clio\", \"red\" |]\n  [| \"Clio\", \"green\" |]\n  [| \"Megane\", \"yellow\" |]\n  [| \"Megane\", \"yellow\" |]\n  [| \"Megane\", \"black\" |]\n  [| \"Hummer\", \"gold\" |]\n\n// create the 'Catalog' table in 2 steps\n// step 1: define the 'Catalog' table using the 'whichever by' keyword\ntable Catalog = whichever by [Input.Car, Input.Color]\n// step 2: create the primary column by aggregating from the 'Input' table into the 'Catalog' table\nCatalog.Car = same(Input.Car)\nCatalog.Color = same(Input.Color)\n\n// display the 'Catalog' table\nshow table \"Catalog\" with\n  Catalog.Car\n  Catalog.Color\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. **Logical Completeness:**\n   - The provided solution creates a table `Catalog` with every combination of Car and Color from the `Input` table.\n   - It includes all the required components of the problem statement.\n   - The solution maintains the essential business rule of creating a catalog with unique combinations of Car and Color.\n\n2. **Logical Consistency:**\n   - The data flow architecture is self-consistent, with the creation of `Catalog` table directly from the `Input` table.\n   - There are no contradictory conditionals present in the solution.\n\n3. **Verifiability:**\n   - The critical computation steps are traceable, with clear aggregation and selection of unique combinations.\n   - Key parameters like Car and Color are configurable and correctly utilized in the solution.\n\n**Final Judgment:**  \nBased on the analysis, the solution is logically correct, compliant with the given problem statement, and adheres to the provided reference solution without any flaws.\n\n**Decision: 1** (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "32-whichever by.json",
+            "question": "Considering the table Input as given below, create a table Car from the table Input with the values of the column Car.\nFor each car compute the number of lines, the number of different colors and the average price (using the price as value indicator) then display the results.\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// create the 'Car' table in 2 steps\n// step 1: define the 'Car' table using the 'whichever by' keyword\ntable Car = by [Input.Car]\n// step 2: create the primary columns by aggregating from the 'Input' table into the 'Car' table\nCar.Car = same(Input.Car)\n\n// compute the number of lines price per car by aggregating from the 'Input' table into the 'Car' table\nCar.NbLines = count(Input.*)\n\n// compute the number of different colors per car by aggregating from the 'Input' table into the 'Car' table\nCar.NbColor = distinct(Input.Color)\n\n// compute the average price per car by aggregating from the 'Input' table into the 'Car' table\nCar.AvgPrice = avg(Input.Price)\n\n// display the 'Car' table\n// use the stylecode {unit: \"€\"} to display the price currency\nshow table \"Car\" with\n  Car.Car\n  Car.NbLines\n  Car.NbColor\n  Car.AvgPrice {unit: \"€\"}\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 13: 'distinct(Input.Color)' has type number, should be boolean. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "33-whichever by.json",
+            "question": "Considering the table Input as given below, create a table Catalog from the table Input with every combination of Car and Color.\nCompute the minimum price for each car, for each color and for each combination of car and color. Display the table Catalog.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// create the 'Catalog' table in 2 steps\n// step 1: define the 'Catalog' table using the 'whichever by' keyword\ntable Catalog = whichever by [Input.Car, Input.Color]\n// step 2: create the primary column by aggregating from the 'Input' table into the 'Catalog' table\nCatalog.Car = same(Input.Car)\nCatalog.Color = same(Input.Color)\n\n// compute the minimum price per car by aggregating from the 'Input' table into the 'Catalog' table\n// specify the link using the by-at keywords\nCatalog.MinPriceCar = min(Input.Price) by Input.Car at Catalog.Car\n\n// compute the minimum price per color by aggregating from the 'Input' table into the 'Catalog' table\n// specify the link using the by-at keywords\nCatalog.MinPriceColor = min(Input.Price) by Input.Color at Catalog.Color\n\n// compute the minimum price per car and color by aggregating from the 'Input' table into the 'Catalog' table\nCatalog.MinPrice = min(Input.Price)\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 1: Found '[' but expected identifier. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "40-by at.json",
+            "question": "Considering the tables Catalog and Orders as given below.\nFirst compute the number of sales for each car.\nThen compute the average sell price for each color (using the order amount as value indicator).\nFinally identify the best selling car by number of sales and best selling color by sell price. Display the results in the Catalog table.\n\ntable Catalog = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\", 25000 |]\n  [| \"Clio\", \"green\", 19000 |]\n  [| \"Megane\", \"yellow\", 21000 |]\n  [| \"Megane\", \"black\", 27000 |]\n  [| \"Hummer\", \"red\", 150000 |]\n\ntable Orders = with\n  [| as Car, as Color, as OrderQty, as OrderAmount, as OrderDate |]\n  [| \"Clio\", \"green\", 2, 35000, date(2024, 7, 6) |]\n  [| \"Clio\", \"green\", 1, 20000, date(2024, 7, 19) |]\n  [| \"Clio\", \"green\", 1, 19000, date(2024, 8, 10) |]\n  [| \"Clio\", \"green\", 3, 57000, date(2024, 9, 9) |]\n  [| \"Clio\", \"red\", 1, 25000, date(2024, 7, 17) |]\n  [| \"Clio\", \"red\", 1, 26000, date(2024, 8, 5) |]\n  [| \"Megane\", \"yellow\", 1, 20500, date(2024, 8, 1) |]\n  [| \"Megane\", \"yellow\", 1, 23000, date(2024, 8, 18) |]\n  [| \"Hummer\", \"red\", 1, 155000, date(2024, 6, 29) |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Catalog = with\n  [| as Car, as Color|]\n  [| \"Clio\", \"red\"|]\n  [| \"Clio\", \"green\"|]\n  [| \"Megane\", \"yellow\"|]\n  [| \"Megane\", \"black\"|]\n  [| \"Hummer\", \"red\"|]\n\ntable Orders = with\n  [|as Car, as Color, as OrderQty, as OrderAmount|]\n  [|\"Clio\", \"green\", 2, 35000|]\n  [|\"Clio\", \"green\", 1, 20000|]\n  [|\"Clio\", \"green\", 1, 19000|]\n  [|\"Clio\", \"green\", 3, 57000|]\n  [|\"Clio\", \"red\", 1, 25000|]\n  [|\"Clio\", \"red\", 1, 26000|]\n  [|\"Megane\", \"yellow\", 1, 20500|]\n  [|\"Hummer\", \"red\", 1, 155000|]\n\n// compute the number of sales per car by aggregating from the 'Orders' table into the 'Catalog' table\nCatalog.NbSalesCar = count(Orders.*) by Orders.Car at Catalog.Car\n\n// compute the average sell price per color by aggregating from the 'Orders' table into the 'Catalog' table\nCatalog.AvgSellPriceColor = avg(Orders.OrderAmount / Orders.OrderQty) by Orders.Color at Catalog.Color\n\n// identify the best selling car\n// step 1: compute the maximum number of sales per car overall\nmaxNbSalesCar = max(Catalog.NbSalesCar)\nCatalog.IsBestsellerCar = Catalog.NbSalesCar == maxNbSalesCar\n\n// identify the best selling color\nmaxSellPriceColor = max(Catalog.AvgSellPriceColor)\nCatalog.IsBestsellerColor = Catalog.AvgSellPriceColor == maxSellPriceColor\n\n// display the 'Catalog' table with the results\n// use the stylecode {booleans: \"✔️/❌\"} to aesthetically display the booleans\n// use the stylecode {unit: \"€\"} to display the price currency\nshow table \"Catalog\" {booleans: \"✔️/❌\"} with\n  Catalog.Car\n  Catalog.Color\n  Catalog.NbSalesCar\n  Catalog.IsBestsellerCar\n  Catalog.AvgSellPriceColor {unit: \"€\"}\n  Catalog.IsBestsellerColor\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Based on the provided solution and the evaluation framework, let's analyze the answer step by step:\n\n### Dimension 1: Logical Completeness\n1. Computes the number of sales for each car ✔️\n2. Computes the average sell price for each color ✔️\n3. Identifies the best selling car by number of sales ✔️\n4. Identifies the best selling color by sell price ✔️\n\n### Dimension 2: Logical Consistency\n1. The data flow architecture is self-consistent ✔️\n2. No contradictory conditionals present ✔️\n\n### Dimension 3: Verifiability\n1. Critical computation steps are traceable ✔️\n2. Key parameters are configurable ✔️\n\n### Decision Framework\n1. Stepwise Verification: All steps pass the evaluation ✔️\n2. Defect Flagging: No flaws detected throughout the analysis ✔️\n3. Final Judgment: 1 - All correct compliant with zero incorrect items\n\nTherefore, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "41-by at.json",
+            "question": "Considering the table Input as given below, create a table Catalog from the table Input with every combination of Car and Color.\nCompute the average price for each car, for each color and for each combination of car and color (using the price as value indicator) then display the results.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// create the 'Catalog' table in 2 steps\n// step 1: define the 'Catalog' table using the 'by' keyword\ntable Catalog = by [Input.Car, Input.Color]\n// step 2: create the primary columns by aggregating from the 'Input' table into the 'Catalog' table\nCatalog.Car = same(Input.Car)\nCatalog.Color = same(Input.Color)\n\n// compute the average price per car by aggregating from the 'Input' table into the 'Catalog' table\n// specify the link using the by-at keywords\nCatalog.AvgPriceCar = avg(Input.Price) by Input.Car at Catalog.Car\n\n// compute the average price per color by aggregating from the 'Input' table into the 'Catalog' table\n// specify the link using the by-at keywords\nCatalog.AvgPriceColor = avg(Input.Price) by Input.Color at Catalog.Color\n\n// compute the average price per car and color by aggregating from the 'Input' table into the 'Catalog' table\nCatalog.AvgPrice = avg(Input.Price)\n\n// display the 'Catalog' table\n// use the stylecode {unit: \"€\"} to display the price currency\nshow table \"Catalog\" with\n  Catalog.Car\n  Catalog.Color\n  Catalog.AvgPriceCar {unit: \"€\"}\n  Catalog.AvgPriceColor {unit: \"€\"}\n  Catalog.AvgPrice {unit: \"€\"}\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 9: Undefined variable 'Catalog.Price'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "50-group.json",
+            "question": "///Considering the table Input as given below, compute the number of available cars per car model, the number of different available colors per car,\n///the average, maximum and minimum price for each car (using the price as value indicator). Compute the results directly in the tile displaying the table.\n/// table Input = with\n///   [| as Car, as Color, as Price |]\n///   [| \"Clio\", \"red\" , 25000|]\n///   [| \"Clio\", \"green\" , 19000 |]\n///   [| \"Megane\", \"yellow\" , 20000 |]\n///   [| \"Megane\", \"yellow\" , 21000 |]\n///   [| \"Megane\", \"black\" , 27000 |]\n///   [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// display the 'Input' table with the results\n// use the stylecode {unit: \"€\"} to display the price currency\n// use the 'group by' keyword at the end to aggregate the different values\nshow table \"Input\" with\n  Input.Car\n  //compute the number of lines in the table Input per car\n  count(Input.*) as \"# available cars\"\n  //compute the number of different colors in the table Input per car\n  distinct(Input.Color) as \"# different colors\"\n  //compute the average price\n  avg(Input.Price) as \"Avg price\" {unit: \"€\"}\n  //compute the maximum price\n  max(Input.Price) as \"Max price\" {unit: \"€\"}\n  //compute the minimum price\n  min(Input.Price) as \"Min price\" {unit: \"€\"}\n  //aggregate by Car\n  group by Input.Car\n```",
+            "ref": "relational-algebra_group",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 11: Found 'group' but expected end-of-line. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "60-order.json",
+            "question": "Considering the table Input as given below, display the table and order the results from lowest to highest price.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\nCloned from '/LLM/by/60-order by' on 2024-12-06",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// display the 'Input' table with the results\n// use the stylecode {unit: \"€\"} to display the price currency\nshow table \"Input\" with\n  Input.Car\n  Input.Color\n  Input.Price {unit: \"€\"}\n  order by Input.Price\n```",
+            "ref": "order-challenge",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 17: Found 'sort' but expected 'show', 'with', 'for', 'each', '_', identifier, 'write', 'schema', 'montecarlo', 'autodiff', '@', 'def', 'delete', 'expect', '[|', 'read', '{', 'table', 'loop', 'import', 'return', 'dash', 'sample', 'const', 'export', 'if', 'span', 'where', 'keep' or end-of-script. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "61-order by.json",
+            "question": "Considering the table Input as given below, display the table and order the results first by car name then by highest average price by car.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// Cloned from '/LLM/by/60-order by' on 2024-12-06\n// Cloned from '/LLM/by/60-order by' on 2024-12-06",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// display the 'Input' table with the results\n// use the stylecode {unit: \"€\"} to display the price currency\nshow table \"Input\" with\n  Input.Car\n  Input.Color\n  Input.Price {unit: \"€\"}\n  order by Input.Car, avg(Input.Price) by Input.Car desc\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The provided solution starts by defining the table `Input` with columns Car, Color, and Price, which matches the problem statement.\n   \n2. The solution then attempts to show a table named \"Ordered Cars\" with columns Car and the average Price grouped by Car, ordered first by Car name and then by the average Price in descending order.\n\n3. The reference solution provided in the additional reference section also displays the \"Input\" table with columns Car, Color, and Price, ordering by Car and then by the average Price by Car in descending order.\n\n4. **Logical Completeness:**  \n   - The solution implements all the required components of the problem statement by displaying the tables with the necessary columns and ordering criteria.\n   - It maintains the essential business rule of ordering the results first by Car name and then by the highest average price by Car.\n\n5. **Logical Consistency:**  \n   - The data flow architecture is self-consistent, with the correct grouping and ordering of data based on Car and average Price.\n   - There are no contradictory conditionals present in the solution.\n\n6. **Verifiability:**  \n   - The critical computation steps, such as grouping by Car and calculating the average Price, are traceable in the solution.\n   - The key parameters for ordering the results are configurable and correctly applied.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "01-const.json",
+            "question": "01-Const\n\nThe const keyword indicates that the value taken by a variable is known at compile time and that it won’t change later at runtime. Those variables are primarily intended to control the files being read.\nConsider the file \"/clean/Catalog.ion\" which contains 2 columns:\n - a text \"UId\" uniquely identifying a product\n - a date \"LaunchDate\" tracking when the product was first launched.\nStore the path to the folder in a const variable and read the file using a regular path. Display the table.",
+            "question_type": "coding",
+            "ground_truth": "```nvn\nconst path = \"/clean/\" //the path must be declared as a const to be used as a compile-time variable. Path schemas use single quote '' while regular path use double quotes \"\"\nread \"\\{path}/Catalog.ion\" as Catalog[id] with //\"id\" is the primary dimension of Catalog, based on \"UId\" in the file\n  \"UId\" as id : text\n  LaunchDate : date\n\nshow table \"Catalog\" with\n  id as \"id\"\n  Catalog.LaunchDate\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Based on the provided problem statement and the two reference solutions, the evaluation is as follows:\n\n### Stepwise Verification:\n1. **Logical Completeness**:\n   - Both solutions implement the required components of the problem statement by reading the file \"/clean/Catalog.ion\" with the specified columns.\n   - Both solutions maintain the essential business rule of using a const variable to store the folder path.\n\n2. **Logical Consistency**:\n   - Both solutions have a self-consistent data flow architecture, with the const variable storing the folder path and using it to read the file.\n   - There are no contradictory conditionals present in either solution.\n\n3. **Verifiability**:\n   - Both solutions have traceable critical computation steps, where the const variable is used to construct the file path for reading.\n   - The key parameter, which is the folder path, is configurable through the const variable.\n\n### Final Judgment:\nConsidering the evaluation criteria and the provided solutions, the final judgment is:  \n1 - All correct compliant with zero incorrect items\n\nTherefore, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "02-const.json",
+            "question": "///02-Const\n\n///The const keyword indicates that the value taken by a variable is known at compile time and that\n///it won’t change later at runtime. Those variables are primarily intended to control the files\n///being read.\n///Consider the file '/clean/tmp1/Catalog.ion' path schema which contains 2 columns:\n/// - a text \"UId\" uniquely identifying a product\n/// - a date \"LaunchDate\" tracking when the product was first launched.\n///The path schema is stored in a module \"/modules/PathSchemas\".\n///Store the path to the folder in a const variable and read the file using a path schema. Display the table.",
+            "question_type": "coding",
+            "ground_truth": "```envision\nimport \"/modules/PathSchemas\" as Schemas //modules use the import keyword\nconst path = '/clean/' //the path must be declared as a const to be used as a compile-time variable. Path schemas use single quote '' while regular path use double quotes \"\"\nread '\\{path}/Catalog.ion' as Catalog[id] with //\"id\" is the primary dimension of Catalog, based on \"UId\" in the file\n  id = Catalog.Uid //type is known from the schema. Realiasing from Uid to id.\n\nshow table \"Catalog\" with\n  id as \"id\"\n  Catalog.LaunchDate\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 7: The prefix `folderPath` is not a schema path. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "03-const.json",
+            "question": "///03-Const\n\n///The const keyword indicates that the value taken by a variable is known at compile time and that\n///it won’t change later at runtime. Those variables are primarily intended to control the files\n///being read.\n///Consider the stockouts snapshots \"/clean/snapshots/Stockouts_YYYY-MM.ion\" which contain 3 columns:\n/// - a text \"UId\" uniquely identifying a product\n/// - a date \"SnapshotDate\" tracking when the snapshot file was produced\n/// - a boolean \"IsOOS\" tracking if the product is stocked-out for that period.\n///Read the stockout snapshot from two months ago using regular path.\n///Display the ratio product stocked-out and the period in a summary.",
+            "question_type": "coding",
+            "ground_truth": "```envision\nconst todayMonthMinus2 = month(today())-2 //current month - 2\n\nread \"/clean/snapshots/Stockouts_\\{todayMonthMinus2}.ion\" as Stockouts expect[date] with //date is a secondary dimension for Stockouts based on \"SnapshotDate\"\n  UId: text\n  \"SnapshotDate\" as date : date //must realias the column SnapshotDate to its dimension date\n  IsOOS : boolean\n\n\nshow summary \"Out of stocked products\" with\n  same(date) as \"Period\"\n  ratio(Stockouts.IsOOS) as \"OSS ratio\" {numbers: percent}\n\n//autres idées\n//const sur une user def\n//const qui switch en fonction de la date ?\n//const dans un module https://lokad.atlassian.net/browse/LK-8586\n// https://lokad.atlassian.net/browse/LK-8402\n// https://lokad.atlassian.net/browse/LK-6834 = OG feature ticket\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 3: Found schema path enter but expected boolean, number, 'schema', 'enum', markdown template start, text interpolation, '(', 'if', unaryoperator, identifier, '...' or text. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "04-const.json",
+            "question": "04-Const (NB: can't be NVN6 because of user def)\n\nThe const keyword indicates that the value taken by a variable is known at compile time and that it won’t change later at runtime. Those variables are primarily intended to control the files being read.\nConsider two files with the same structure \"/clean/ref/Catalog.ion\" and \"/clean/sim/Catalog.ion\" which contain 3 columns:\n - a text \"UId\" uniquely identifying a product, it is the primary dimension.\n - a number \"BuyPrice\" representing a buying price reference.\nThe file in /ref/ is the current production file. The file in /sim/ is a simulation file.\nCreate a user defined function which will decide which subfolder, ref or sim, should be read. The sim folder should be read if the today() date of the script is 2024-12-30 else it should be the ref folder being read. Make sure to flag your function as const.\n\nRead the Catalog file from the correct folder assuming today is 2024-12-30.\nDisplay the date considered and the average of the BuyPrice found in the file in a summary.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ndef const pure folderPath(t: date, date_sim: date) with\n  p = if t == date_sim then \"/sim\" else \"/ref\"\n  return p\n\nconst fpath = folderPath(today(), date(2024,12,30))\n\nread \"/clean/{fpath}/Catalog.ion\" as Catalog[ref] with\n  \"UId\" as ref : text\n  BuyPrice : number\n\nshow summary \"Out of stocked products\" with\n  today() as \"Date considered\"\n  avg(Catalog.BuyPrice) as \"Avg BuyPrice\" {numbers: simple; unit:\"€\"}\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 1: Found identifier but expected ',' or '='. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "05-const.json",
+            "question": "05-Const\n\nThe const keyword indicates that the value taken by a variable is known at compile time and that it won’t change later at runtime. Those variables are primarily intended to control the files being read.\n\n1. What is the result of the assert test below assuming today is the 15th of December?\n2. Which days of the year 2025 would pass the test?\n\nconst fileRead = match dayNum(today()) with\n  1 -> \"/clean/NewCatalog.ion\"\n  .. -> \"/clean/OldCatalog.ion\"\n\nread \"{fileRead}\" as _Catalog\n\nshow assert \"Test\" with\n  contains(same(Files.Path) when(Files.Alias == \"_Catalog\"), \"New\") as \"Test\"",
+            "question_type": "QA",
+            "ground_truth": "1. The assert \"Test\" will FAIL. Since it is assumed that today() = December 15th then the fileRead const evaluates to \"/clean/OldCatalog.ion\". That file is read as \"_Catalog\". The assert tests if the file aliased \"_Catalog\" contains \"New\" in its path. This is NOT the case for \"/clean/OldCatalog.ion\" and therefore the test fails.\n\n2. To pass the assert test, the file read under alias \"_Catalog\" must contain \"New\" in its path. That happens when fileRead produces \"/clean/NewCatalog.ion\", which is the case when dayNum(today()) equals 1. Thus, the test will pass on the first day of each month in 2025: 2025-01-01, 2025-02-01, 2025-03-01, …, 2025-12-01.",
+            "ref": "05-const",
+            "compilation_result": null,
+            "compilation_attempts": null,
+            "judgment": "correct",
+            "judge_output": "1. The provided answer correctly explains the logic behind the assert test assuming today is the 15th of December. It mentions that the `fileRead` variable would be set to `\"/clean/OldCatalog.ion\"` based on the `match` statement, leading to the assert test failing as the path does not contain \"New\".\n\n2. The answer also correctly identifies that the test would pass on the first day of each month in 2025 when `dayNum(today())` equals 1, resulting in the file path being `\"/clean/NewCatalog.ion\"`.\n\nOverall, the answer is logically sound, consistent with the provided references, and covers all required components of the problem statement.\n\n### Decision: 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "01-desc.json",
+            "question": "01-desc\nThe desc keyword is an option for a process call. When desc is present, the ordering of the iteration is inverted.\nWhen the scan takes a tuple, the desc option can be independently applied to every element of the tuple, i.e. scan [a desc, b, c desc].\n\nThe desc keyword is an option for a table tile block. When desc is present, the ordering of the table is inverted.\nWhen the order by takes a tuple as argument, the desc keyword can remain outside the tuple: order by [a, b, c] desc\nor applied individually inside the tuple to offer an ordering control over each element that makes the tuple: order by [a desc, b, c desc].\n\nConsidering the table Items as given below, display the table sorted by Cost in descending order\n table Items = with\n   [| as Item,         as Cost|]\n   [| \"Tango\",         90     |]\n   [| \"Observer ward\", 0      |]\n   [| \"Bracer\",        505    |]\n   [| \"Reaver\",        2700   |]\n   [| \"Divine rapier\", 5600   |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Items = with\n  [| as Item,         as Cost|]\n  [| \"Tango\",         90     |]\n  [| \"Observer ward\", 0      |]\n  [| \"Bracer\",        505    |]\n  [| \"Reaver\",        2700   |]\n  [| \"Divine rapier\", 5600   |]\n\nshow table \"Items\" with\n  Items.Item\n  Items.Cost\n  order by [Items.Cost desc] //do not forget the square brackets [] except if the order by has only one vector\n```",
+            "ref": "desc-keyword_ordering",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 9: Found 'desc' but expected 'group', ',', '{', end-of-line, 'into', operator5, operator4, operator3, operator2, operator1, operator0, 'write', identifier, 'as' or 'order'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "02-desc.json",
+            "question": "02-desc\n\nThe desc keyword is an option for a process call. When desc is present, the ordering of the iteration is inverted.\nWhen the scan takes a tuple, the desc option can be independently applied to every element of the tuple, i.e. scan [a desc, b, c desc].\n\nThe desc keyword is an option for a table tile block. When desc is present, the ordering of the table is inverted.\nWhen the order by takes a tuple as argument, the desc keyword can remain outside the tuple: order by [a, b, c] desc\nor applied individually inside the tuple to offer an ordering control over each element that makes the tuple: order by [a desc, b, c desc].\n\nConsidering the table Items as given below:\n table Items = with\n   [| as Item,         as Cost|]\n   [| \"Tango\",         90     |]\n   [| \"Observer ward\", 0      |]\n   [| \"Bracer\",        505    |]\n   [| \"Reaver\",        2700   |]\n   [| \"Divine rapier\", 5600   |]\n\nRank the Items according to their Cost from the cheapest to the most expensive i.e rank 1 being the cheapest.\nYou must use the rankrev function. Display the table Items sorted by ascending rank.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Items = with\n  [| as Item,         as Cost|]\n  [| \"Tango\",         90     |]\n  [| \"Observer ward\", 0      |]\n  [| \"Bracer\",        505    |]\n  [| \"Reaver\",        2700   |]\n  [| \"Divine rapier\", 5600   |]\n\nItems.Rk = rankrev() scan [Items.Cost desc] //rankrev() is ranking by descending order hence rankrev() scan [... desc] is ranking by ascending order!\n\nshow table \"Items\" with\n  Items.Rk\n  Items.Item\n  Items.Cost\n  order by Items.Rk\n```",
+            "ref": "desc",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Based on the evaluation framework provided, let's analyze the solution step by step:\n\n### Step 1: Logical Completeness\n- The solution correctly ranks the items according to their cost from cheapest to most expensive.\n- It uses the `rankrev()` function to sort the items in ascending order based on cost.\n- The final table displays the Item, Cost, and Rank columns.\n\n### Step 2: Logical Consistency\n- The data flow architecture is self-consistent, with the correct application of the `rankrev()` function and sorting by cost.\n- There are no contradictory conditionals present in the solution.\n\n### Step 3: Verifiability\n- The critical computation steps, such as ranking by cost and displaying the final table, are traceable.\n- The key parameter, which is the cost of items, is used for sorting and ranking.\n\n### Decision:\nConsidering the above analysis, the solution provided is logically correct, complete, consistent, and verifiable based on the problem statement and the reference solution. Therefore, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "03-desc.json",
+            "question": "///03-desc\n///The desc keyword is an option for a process call. When desc is present, the ordering of the iteration is inverted.\n///When the scan takes a tuple, the desc option can be indepently applied to every element of the tuple, i.e. scan [a desc, b, c desc].\n\n///The desc keyword is an option for a table tile block. When desc is present, the ordering of the table is inverted.\n///When the order by takes a tuple as argument, the desc keyword can remain outside the tuple: order by [a, b, c] desc\n///or applied individually inside the tuple to offer an ordering control over each element that makes the tuple: order by [a desc, b, c desc].\n\n///Considering the table Items as given below, display the table sorted by Damage in descending order, Strength in ascending order, Cost in descending order.\n/// table Items = with\n///   [| as Item,         as Cost,  as Damage,  as Strength      |]\n///   [| \"Tango\",         90     ,    0       ,  0               |]\n///   [| \"Observer ward\", 0      ,    0       ,  0               |]\n///   [| \"Bracer\",        505    ,    0       ,  5               |]\n///   [| \"Reaver\",        2700   ,    0       ,  25              |]\n///   [| \"Divine rapier\", 5600   ,    100     ,  0               |]",
+            "question_type": "coding",
+            "ground_truth": "```nvn\ntable Items = with\n  [| as Item,         as Cost,  as Damage,  as Strength      |]\n  [| \"Tango\",         90     ,    0       ,  0               |]\n  [| \"Observer ward\", 0      ,    0       ,  0               |]\n  [| \"Bracer\",        505    ,    0       ,  5               |]\n  [| \"Reaver\",        2700   ,    0       ,  25              |]\n  [| \"Divine rapier\", 5600   ,    100     ,  0               |]\n\nshow table \"Items\" with\n  Items.Item\n  Items.Damage\n  Items.Strength\n  Items.Cost\n  order by [Items.Damage desc, Items.Strength, Items.Cost desc]\n```",
+            "ref": "03-desc",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 2,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The solution defines the table `Items` with the specified columns.\n2. The `show table` command is used to display the table \"Items\" with the columns specified in the correct order.\n3. The `order by` clause is correctly used with `[Items.Damage desc, Items.Strength, Items.Cost desc]` to sort the table by Damage in descending order, Strength in ascending order, and Cost in descending order.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "04-desc.json",
+            "question": "///04-desc\n///The desc keyword is an option for a process call. When desc is present, the ordering of the iteration is inverted.\n///When the scan takes a tuple, the desc option can be independently applied to every element of the tuple, i.e. scan [a desc, b, c desc].\n\n///The desc keyword is an option for a table tile block. When desc is present, the ordering of the table is inverted.\n///When the order by takes a tuple as argument, the desc keyword can remain outside the tuple: order by [a, b, c] desc\n///or applied individually inside the tuple to offer an ordering control over each element that makes the tuple: order by [a desc, b, c desc].\n\n///Considering the table Items as given below:\n/// table Items = with\n///   [| as Item,         as Cost,  as Damage,  as Strength      |]\n///   [| \"Tango\",         90     ,    0       ,  0               |]\n///   [| \"Observer ward\", 0      ,    0       ,  0               |]\n///   [| \"Bracer\",        505    ,    0       ,  5               |]\n///   [| \"Reaver\",        2700   ,    0       ,  25              |]\n///   [| \"Divine rapier\", 5600   ,    100     ,  0               |]\n///Rank the Items according to their Strength from the strongest to the least. You must use the rank() function.\n///In case of equality, you'll tiebreak items using their damage, the more damage the better for the rank.\n///Display the table Items sorted by ascending rank.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Items = with\n  [| as Item,         as Cost,  as Damage,  as Strength      |]\n  [| \"Tango\",         90     ,    0       ,  0               |]\n  [| \"Observer ward\", 0      ,    0       ,  0               |]\n  [| \"Bracer\",        505    ,    0       ,  5               |]\n  [| \"Reaver\",        2700   ,    0       ,  25              |]\n  [| \"Divine rapier\", 5600   ,    100     ,  0               |]\n\nItems.Rk = rank() scan [Items.Strength desc, Items.Damage desc] //rank() ranks in ascending order\n\nshow table \"Items\" with\n  Items.Rk\n  Items.Item\n  Items.Strength\n  Items.Damage\n  order by [Items.Rk]\n```",
+            "ref": "desc_example",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 16: Found 'order' but expected 'show', 'with', 'for', 'each', '_', identifier, 'write', 'schema', 'montecarlo', 'autodiff', '@', 'def', 'delete', 'expect', '[|', 'read', '{', 'table', 'loop', 'import', 'return', 'dash', 'sample', 'const', 'export', 'if', 'span', 'where', 'keep' or end-of-script. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "05-desc.json",
+            "question": "05-desc\n\nThe desc keyword is an option for a process call. When desc is present, the ordering of the iteration is inverted. When the scan takes a tuple, the desc option can be independently applied to every element of the tuple, i.e. scan [a desc, b, c desc].\n\nThe desc keyword is an option for a table tile block. When desc is present, the ordering of the table is inverted. When the order by takes a tuple as argument, the desc keyword can remain outside the tuple: order by [a, b, c] desc or applied individually inside the tuple to offer an ordering control over each element that makes the tuple: order by [a desc, b, c desc].\n\nConsidering the table Items as given below, display the table sorted by Damage in descending order, Cost in descending order.\n table Items = with\n   [| as Item,         as Cost,  as Damage,  as Strength      |]\n   [| \"Tango\",         90     ,    0       ,  0               |]\n   [| \"Observer ward\", 0      ,    0       ,  0               |]\n   [| \"Bracer\",        505    ,    0       ,  5               |]\n   [| \"Reaver\",        2700   ,    0       ,  25              |]\n   [| \"Divine rapier\", 5600   ,    100     ,  0               |]",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Items = with\n  [| as Item,         as Cost,  as Damage,  as Strength      |]\n  [| \"Tango\",         90     ,    0       ,  0               |]\n  [| \"Observer ward\", 0      ,    0       ,  0               |]\n  [| \"Bracer\",        505    ,    0       ,  5               |]\n  [| \"Reaver\",        2700   ,    0       ,  25              |]\n  [| \"Divine rapier\", 5600   ,    100     ,  0               |]\n\nshow table \"Items\" with\n  Items.Item\n  Items.Strength\n  Items.Cost\n  order by [Items.Strength, Items.Cost] desc //would also work with [Items.Strength desc, Items.Cost desc]\n```",
+            "ref": "desc",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 2,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The provided solution defines the table \"Items\" correctly with the specified columns.\n2. The solution then attempts to display the table \"Items sorted\" with columns Item, Cost, Damage, and Strength.\n3. The ordering is set using \"order by [Items.Damage desc, Items.Cost desc]\" to sort by Damage in descending order and then by Cost in descending order.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "06-desc.json",
+            "question": "///06-desc\n///The desc keyword is an option for a process call. When desc is present, the ordering of the iteration is inverted.\n///When the scan takes a tuple, the desc option can be independently applied to every element of the tuple, i.e. scan [a desc, b, c desc].\n\n///The desc keyword is an option for a table tile block. When desc is present, the ordering of the table is inverted.\n///When the order by takes a tuple as argument, the desc keyword can remain outside the tuple: order by [a, b, c] desc\n///or applied individually inside the tuple to offer an ordering control over each element that makes the tuple: order by [a desc, b, c desc].\n\n///1. Can you enumerate the Items in the order in which they will appear in the table following the script below?\n///2a. What if instead of rank, the rankrev function was used? How could you have written the show in a different\n///way to achieve the same result?\n\ntable Items = with\n  [| as Item,         as Cost,  as Damage,  as Strength      |]\n  [| \"Tango\",         90     ,    0       ,  0               |]\n  [| \"Observer ward\", 0      ,    0       ,  0               |]\n  [| \"Bracer\",        505    ,    0       ,  5               |]\n  [| \"Reaver\",        2700   ,    0       ,  25              |]\n  [| \"Divine rapier\", 5600   ,    100     ,  0               |]\n\nItems.Rk = rankrev() scan [Items.Strength desc, Items.Cost desc, Items.Damage]\n\nshow table \"Items\" with\n  Items.Rk\n  Items.Item\n  Items.Damage\n  Items.Strength\n  Items.Cost\n  order by Items.Rk desc",
+            "question_type": "QA",
+            "ground_truth": "///ANSWER\n///1. Observer ward > Tango > Divine rapier > Bracer > Reaver\n///2a. Reaver > Bracer > Divine rapier > Tango > Observer ward\n///2b.\n//show table \"Items\" with\n  // Items.Rk\n  // Items.Item\n  // Items.Damage\n  // Items.Strength\n  // Items.Cost\n  // order by Items.Rk ///removing the desc here yield the same result as using rankrev() instead of rank()",
+            "ref": "desc_keyword",
+            "compilation_result": null,
+            "compilation_attempts": null,
+            "judgment": "correct",
+            "judge_output": "1. The solution correctly enumerates the Items in the order in which they will appear in the table based on the provided script. The ordering is as follows:\n   1. Divine rapier\n   2. Reaver\n   3. Bracer\n   4. Tango\n   5. Observer ward\n\n2a. The solution correctly explains how to achieve the same result using the `rankrev` function instead of `rank` by changing the `order by` statement to `order by Items.Rk`.\n\nBased on the analysis, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "01-if.json",
+            "question": "/// 01-if : basic if ternary operator\n\n/// The ternary operator if-then-else takes a Boolean as first argument,\n/// and two identically typed values as second arguments.\n/// The resulting syntax if c then a else b is treated as an expression.\n\n/// Consider a table named Products where three vectors are defined :\n///  - Product\n///  - Color\n///  - Price\n\n/// Create a third vector PriceCategory which contains two possible values\n/// - Cheap for products with a Price strictly lower than 5\n/// - Expensive for the other products\n\n/// Display the table Products with the three original vectors and the new PriceCategory vector",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nProducts.PriceCategory = if Products.Price < 5 then \"Cheap\" else \"Expensive\"\n\nshow table \"Products\" with\n  Products.Color\n  Products.Price\n  Products.Product\n  Products.PriceCategory\n```",
+            "ref": "if_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Step 1: Logical Completeness  \n- The solution correctly creates a new vector `PriceCategory` based on the condition of `Price < 5`.  \n- It displays the table `Products` with all the required vectors including the new `PriceCategory`.  \n**Result: Pass**\n\nStep 2: Logical Consistency  \n- The data flow is self-consistent, with the `PriceCategory` being determined based on the logical condition provided.  \n- There are no contradictory conditionals present in the solution.  \n**Result: Pass**\n\nStep 3: Verifiability  \n- The critical computation step of assigning the `PriceCategory` based on the `Price` value is traceable.  \n- Key parameter (threshold price for categorization) is configurable and clearly defined.  \n**Result: Pass**\n\nTherefore, the final judgment is 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "02-if.json",
+            "question": "/// 01-if : basic if ternary operator with else if\n\n/// The ternary operator if-then-else takes a Boolean as first argument,\n/// and two identically typed values as second and third arguments.\n/// The resulting syntax if c then a else b is treated as an expression.\n/// An if-then-else operator can be nested inside another\n\n/// Consider a table named Products where three vectors are defined :\n///  - Product\n///  - Color\n///  - Price\n\n/// Create a third vector PriceCategory which contains three possible values\n///  - Cheap for products with a Price strictly lower than 5\n///  - Fair for products with a Price higher or equal to 5 and lower than 12\n///  - Expensive for the other products\n\n/// Display the table Products with the three original vectors and the new PriceCategory vector",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nProducts.PriceCategory = if Products.Price < 5 then\n                           \"Cheap\"\n                         else if Products.Price < 12 then\n                           \"Fair\"\n                         else\n                           \"Expensive\"\n\nshow table \"Products\" with\n  Products.Color\n  Products.Price\n  Products.Product\n  Products.PriceCategory\n```",
+            "ref": "if-ternary_operator",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The solution defines a table named Products with columns Product, Color, and Price.\n2. It correctly calculates the PriceCategory based on the Price values using nested if-else statements.\n3. The PriceCategory values are assigned as \"Cheap\", \"Fair\", or \"Expensive\" based on the Price ranges.\n4. The final table is displayed with Product, Color, Price, and PriceCategory columns.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "03-if.json",
+            "question": "/// 01-if : if statement within a user-defined function\n\n/// The if statement introduces a branch block within a user-defined function.\n/// A branch refers to an instruction that tells the computer to execute a different part of a program\n/// rather than executing statements one by one.\n/// Branches are supported by functions through the keywords if .. else if .. else ...\n\n/// Create a user defined function mySwap taking two scalar arguments x and y.\n/// This pure function returns a table-free tuple containing x and y in a specific order depenging on the following rule.\n/// If x is strictly greater than y then x and y are swapped and the function returns a tuple with y first and x last.\n/// Otherwise x and y are not swapped and the function returns a tuple with x first and y last.\n\n/// Display the result of applying this function to two scalars 4 and 2\n\ndef pure mySwap(x: number, y: number) with\n  a = 0\n  b = 0\n  if x > y\n    a = y\n    b = x\n  else\n    a = x\n    b = y\n  return (a, b)\n\nx, y = mySwap(4, 2)\n\nshow summary \"\" with x, y",
+            "question_type": "coding",
+            "ground_truth": "```envision\ndef pure mySwap(x: number, y: number) with\n  a = 0\n  b = 0\n  if x > y\n    a = y\n    b = x\n  else\n    a = x\n    b = y\n  return (a, b)\n\nx, y = mySwap(4, 2)\n\nshow summary \"\" with x, y\n```",
+            "ref": "if_statement_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "1. **Logical Completeness**  \nThe solution defines a user-defined function `mySwap` that takes two scalar arguments `x` and `y`. It correctly implements the logic to swap `x` and `y` based on the condition `x > y`. The function returns a tuple with the correct order of `x` and `y` as per the problem statement. The function is then called with arguments 4 and 2, and the result is displayed.  \n**Verdict: Correct**\n\n2. **Logical Consistency**  \nThe data flow within the function is consistent, with the correct assignment of values to `a` and `b` based on the condition. There are no contradictory conditionals present in the code.  \n**Verdict: Correct**\n\n3. **Verifiability**  \nThe critical computation steps, including the comparison `x > y` and the assignment of values to `a` and `b`, are traceable and easy to verify. The key parameter values (4 and 2) are configurable and can be changed for testing.  \n**Verdict: Correct**\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "01-keep.json",
+            "question": "///01-keep\n///The keyword keep has two uses in Envision, either to avoid an identation, or to define the state of a process.\n///When the keyword keep appears at the start of a where statement, the filter applies until the end of scope.\n///When the keyword keep appears at the start of a span statement, the UNfilter applies until the end of the scope.\n///At the beginning of a process block, the variables that are part of the state of the process can be declared with the keyword keep.\n///In a for loop that enumerates the values of a column, the keyword keep is used to declare the variables part of the state of the loop.\n///Idem, with a each loop, that enumerates the lines of a table\n\n///Consider the table named \"Products\" with primary dimension \"ref\" and three additional vectors \"Product\", \"Color\", \"Price\":\n/// - ref: uuid of the product, primary dimension of the table\n/// - Product: the product type\n/// - Color: the color of the product\n/// - Price: the unit price of the product\n///Consider additionally, the table named \"Orders\" with primary dimension \"orderid\" with secondary dimension \"ref\" and additional vectors \"OrderDate\", \"Qty\":\n///- ref: uuid of the product, secondary dimension of the table\n///- OrderDate: the date at which the product was ordered\n///- Qty: the quantity ordered for\n///Filter the Orders table, using the keyword keep to only show orders where multiple quantities have been bought.\n///Display the tables within the filtered scope.\n\ntable Products[ref] = with\n  [| as ref , as Product, as Color    , as Price |]\n  [| \"1\"      , \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"2\"      , \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"3\"      , \"hat\"     , \"red\"       , 5.25     |]\n\ntable Orders[orderid] = with\n  [| as orderid, as ProductRef, as OrderDate , as Qty|]\n  [| \"order-1\" , \"1\"     , date(2024,1,18)   , 4     |]\n  [| \"order-2\" , \"2\"     , date(2024,3,15)   , 1     |]\n  [| \"order-3\" , \"1\"     , date(2024,7,21)   , 2     |]\n  [| \"order-4\" , \"1\"     , date(2024,8,6)    , 2     |]\n  [| \"order-5\" , \"1\"     , date(2024,9,19)   , 1     |]\n  [| \"order-6\" , \"3\"     , date(2024,10,4)   , 1     |]\nexpect Orders.ref = Orders.ProductRef",
+            "question_type": "coding",
+            "ground_truth": "```envision\nkeep where Orders.Qty > 1 //this filters ONLY the Orders table and this filter is persisted through the whole script since we used keep\n\nshow table \"Orders\" with\n  Orders.orderid\n  Orders.ref\n  Orders.OrderDate\n  Orders.ProductRef\n  Orders.Qty\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 1: Undefined table `Orders`. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "02-keep.json",
+            "question": "///02-keep\n///The keyword keep has two uses in Envision, either to avoid an identation, or to define the state of a process.\n///When the keyword keep appears at the start of a where statement, the filter applies until the end of scope.\n///When the keyword keep appears at the start of a span statement, the UNfilter applies until the end of the scope.\n///At the beginning of a process block, the variables that are part of the state of the process can be declared with the keyword keep.\n///In a for loop that enumerates the values of a column, the keyword keep is used to declare the variables part of the state of the loop.\n///Idem, with a each loop, that enumerates the lines of a table\n\n///Consider the table named \"Products\" with primary dimension \"ref\" and three additional vectors \"Product\", \"Color\", \"Price\":\n/// - ref: uuid of the product, primary dimension of the table\n/// - Product: the product type\n/// - Color: the color of the product\n/// - Price: the unit price of the product\n///Consider additionally, the table named \"Orders\" with primary dimension \"orderid\" with secondary dimension \"ref\" and additional vectors \"OrderDate\", \"Qty\":\n///- ref: uuid of the product, secondary dimension of the table\n///- OrderDate: the date at which the product was ordered\n///- Qty: the quantity ordered for\n///Filter the tables, using the keyword keep to only show Products that have been bought in multiple quantities at least once.\n///Display the tables within the filtered scope.\n\ntable Products[ref] = with\n  [| as ref , as Product, as Color    , as Price |]\n  [| \"1\"      , \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"2\"      , \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"3\"      , \"hat\"     , \"red\"       , 5.25     |]\n\ntable Orders[orderid] = with\n  [| as orderid, as ProductRef, as OrderDate , as Qty|]\n  [| \"order-1\" , \"1\"     , date(2024,1,18)   , 4     |]\n  [| \"order-2\" , \"2\"     , date(2024,3,15)   , 1     |]\n  [| \"order-3\" , \"1\"     , date(2024,7,21)   , 2     |]\n  [| \"order-4\" , \"1\"     , date(2024,8,6)    , 2     |]\n  [| \"order-5\" , \"1\"     , date(2024,9,19)   , 1     |]\n  [| \"order-6\" , \"3\"     , date(2024,10,4)   , 1     |]\nexpect Orders.ref = Orders.ProductRef",
+            "question_type": "coding",
+            "ground_truth": "```envision\nkeep where any(Orders.Qty > 1) by ref //this filters both Products and Orders tables thanks to primary dimension ref + the filter is persisted through the whole script since we used keep\n\nshow table \"Products\" with\n  Products.ref\n  Products.Color\n  Products.Price\n  Products.Product\n\nshow table \"Orders\" with\n  Orders.orderid\n  Orders.ref\n  Orders.OrderDate\n  Orders.ProductRef\n  Orders.Qty\n```",
+            "ref": "lokad_raw_keep_02",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 1: Found 'keep' but expected 'into', operator5, operator4, operator3, operator2, operator1, operator0, '[' or end-of-line. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "03-keep.json",
+            "question": "///03-keep\n///The keyword keep has two uses in Envision, either to avoid an identation, or to define the state of a process.\n///When the keyword keep appears at the start of a where statement, the filter applies until the end of scope.\n///When the keyword keep appears at the start of a span statement, the UNfilter applies until the end of the scope.\n///At the beginning of a process block, the variables that are part of the state of the process can be declared with the keyword keep.\n///In a for loop that enumerates the values of a column, the keyword keep is used to declare the variables part of the state of the loop.\n///Idem, with a each loop, that enumerates the lines of a table\n\n///Consider the table named \"Products\" with primary dimension \"ref\" and three additional vectors \"Product\", \"Color\", \"Price\":\n/// - ref: uuid of the product, primary dimension of the table\n/// - Product: the product type\n/// - Color: the color of the product\n/// - Price: the unit price of the product\n///Consider additionally, the table named \"Orders\" with primary dimension \"orderid\" with secondary dimension \"ref\" and additional vectors \"OrderDate\", \"Qty\":\n/// - ref: uuid of the product, secondary dimension of the table\n/// - OrderDate: the date at which the product was ordered\n/// - Qty: the quantity ordered for\n///Create the date dimension using keep span. The date dimension should span from 2024-01-01 to 2024-12-31.\n///Display a linechart with the weekly sales amount.",
+            "question_type": "coding",
+            "ground_truth": "```envision\nkeep span date=[date(2024,01,01)..date(2024,12,31)]//creates the date dimension from 2024-01-01 to 2024-12-31\n\nexpect Orders.date = Orders.OrderDate //creates the date dimension as a secondary dimension in Orders table\n\nshow linechart \"Weekly sales amount\" with\n  sum(Orders.Qty*Products.Price) as \"Amount sold\" {unit:\" €\"}\n  group by week\n```",
+            "ref": "03-keep",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 3: Expected 3 columns in this [| .. |]. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "04-keep.json",
+            "question": "///04-keep\n///The keyword keep has two uses in Envision, either to avoid an identation, or to define the state of a process.\n///When the keyword keep appears at the start of a where statement, the filter applies until the end of scope.\n///When the keyword keep appears at the start of a span statement, the UNfilter applies until the end of the scope.\n///At the beginning of a process block, the variables that are part of the state of the process can be declared with the keyword keep.\n///In a for loop that enumerates the values of a column, the keyword keep is used to declare the variables part of the state of the loop.\n///Idem, with a each loop, that enumerates the lines of a table\n\n///Consider the table named \"Products\" with primary dimension \"ref\" and three additional vectors \"Product\", \"Color\", \"Price\":\n/// - ref: uuid of the product, primary dimension of the table\n/// - Product: the product type\n/// - Color: the color of the product\n/// - Price: the unit price of the product\n///Consider additionally, the table named \"Orders\" with primary dimension \"orderid\" with secondary dimension \"ref\" and additional vectors \"OrderDate\", \"Qty\":\n///- ref: uuid of the product, secondary dimension of the table\n///- OrderDate: the date at which the product was ordered\n///- Qty: the quantity ordered for\n///Create the date dimension using keep span. The date dimensions should span from the first day of the year of the smallest OrderDate found in Orders to the last day of NEXT year of the largest OrderDate found in Orders.\n///The period strictly after the largest OrderDate found in Orders is referenced as the future.\n///The period before the largest OrderDate found in Orders is referenced as the past.\n///Compute the past daily sales amount.\n///Assuming future sales are shifted 365 days from past ones and doubled in amount, complete the daily sales table.\n///Display a linechart with daily sales amount (past and future).",
+            "question_type": "coding",
+            "ground_truth": "```envision\nkeep span date=[yearStart(min(Orders.OrderDate))..yearEnd(year(max(Orders.OrderDate))+1)] // creates the date dimension with correct span\nexpect Orders.date = Orders.OrderDate // creates the date dimension as a secondary dimension in Orders table\n\nDay.IsPast = date <= max(Orders.OrderDate)\nDay.IsFuture = date > max(Orders.OrderDate)\n\nDay.WeeklySales_Past = if Day.IsPast then sum(Orders.Qty * Products.Price) else 0\nDay.WeeklySales_Future = if Day.IsFuture then Day.WeeklySales_Past[-365] * 2 else 0 // using lag operator to fetch \"past\" year sales, *2 since doubled\n\nDay.WeeklySales = if Day.IsPast then Day.WeeklySales_Past else Day.WeeklySales_Future\n\nshow linechart \"Weekly sales amount\" with\n  Day.WeeklySales as \"Amount sold\" {unit:\" €\"}\n  group by date\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 7: Found ',' but expected ']'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "05-keep.json",
+            "question": "///05-keep\n///The keyword keep has two uses in Envision, either to avoid an identation, or to define the state of a process.\n///When the keyword keep appears at the start of a where statement, the filter applies until the end of scope.\n///When the keyword keep appears at the start of a span statement, the UNfilter applies until the end of the scope.\n///At the beginning of a process block, the variables that are part of the state of the process can be declared with the keyword keep.\n///In a for loop that enumerates the values of a column, the keyword keep is used to declare the variables part of the state of the loop.\n///Idem, with a each loop, that enumerates the lines of a table\n\n///Consider the script below.\n///1. How many lines are displayed in the \"First\" show table?\n///2. How many lines are displayed in the \"Second\" show table?\n///3. How many lines are displayed in the \"Third\" show table?\n\ntable Products[ref] = with\n  [| as ref , as Product, as Color    , as Price |]\n  [| \"1\"      , \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"2\"      , \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"3\"      , \"hat\"     , \"red\"       , 5.25     |]\n\ntable Orders[orderid] = with\n  [| as orderid, as ProductRef, as OrderDate , as Qty|]\n  [| \"order-1\" , \"1\"     , date(2024,1,18)   , 4     |]\n  [| \"order-2\" , \"2\"     , date(2024,3,15)   , 1     |]\n  [| \"order-3\" , \"1\"     , date(2024,7,21)   , 2     |]\n  [| \"order-4\" , \"1\"     , date(2024,8,6)    , 2     |]\n  [| \"order-5\" , \"1\"     , date(2024,9,19)   , 1     |]\n  [| \"order-6\" , \"3\"     , date(2024,10,4)   , 1     |]\nexpect Orders.ref = Orders.ProductRef\n\n\nshow table \"First\" with\n  Orders.orderid\n\nkeep where Products.ref == \"1\"\n\nshow table \"Second\" with\n  Orders.orderid\n\nwhere Orders.Qty > 1\n  show table \"Third\" with\n    Orders.orderid",
+            "question_type": "QA",
+            "ground_truth": "///1. No filter is applied, the number of lines in the \"First\" show is the number of lines in Orders i.e 6\n///2. A keep filter on primary dimension \"ref\" in Products is applied to keep only Product \"1\".\n///Since the Orders table is downstream Products and linked through the \"ref\" dimension, the Orders table is also filtered on \"1\" only.\n///Therefore \"Second\" only shows 4 lines.\n///3. A where filter is applié to the Orders table to select only lines with Qty > 1. But the previous filter on ref == \"1\"\n///was applied with a keep therefore this filter is still in effect and combines with Qty > 1, the \"Third\" show has 3 lines.",
+            "ref": "",
+            "compilation_result": null,
+            "compilation_attempts": null,
+            "judgment": "correct",
+            "judge_output": "1",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "1-not.json",
+            "question": "///1-not\n\n/// The keyword 'not ' is used to return the negation of a boolean.\n\n/// Consider a table named Products where three vectors are defined :\n///  - Product\n///  - Color\n///  - Price\n///  Displays the products and their prices only if the product is not red.",
+            "question_type": "coding",
+            "ground_truth": "```envision\nwhere not (Products.Color == \"red\")\n  show table \"Products\" with\n    Products.Product\n    Products.Price\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 2,
+            "judgment": "correct",
+            "judge_output": "Step 1: Logical Completeness  \n- The solution correctly filters out products that are red based on the Color column.  \n- It displays the Product and Price columns for products that are not red.  \n**Result: Correct**  \n\nStep 2: Logical Consistency  \n- The logic is consistent in filtering out products with the color red.  \n- There are no contradictory conditionals present.  \n**Result: Correct**  \n\nStep 3: Verifiability  \n- The critical computation step of filtering based on the color red is traceable.  \n- The key parameter for filtering by color is configurable.  \n**Result: Correct**  \n\nFinal Judgment: 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "2-not.json",
+            "question": "The keyword 'not' is used to return the negation of a boolean.\n\nConsider a table named Products where three vectors are defined:\n- Product\n- Color\n- Price\n\nAnd two tables named Catalog_Store_A and Catalog_Store_B where two vectors are defined:\n- Product\n- Stock\n\nThe tables Catalog_Store provide the catalog of products available in each store and the related stock available.\n\nDisplay a table with the products and their prices only if a product appears in the catalog of Store A and not in Store B.",
+            "question_type": "coding",
+            "ground_truth": "where Products.Product in Catalog_Store_A.Product  and not( Products.Product in Catalog_Store_B.Product )\n  show table \"Products\" with\n    Products.Product\n    Products.Price\n",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 2,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The solution defines three tables: Products, Catalog_Store_A, and Catalog_Store_B, with the specified columns.\n\n2. It then creates a new table named FilteredProducts by filtering the Products table based on the conditions:\n   - Products.Product must be in Catalog_Store_A.Product\n   - Products.Product must not be in Catalog_Store_B.Product\n\n3. The final table \"Filtered Products\" is displayed with columns Product and Price from the FilteredProducts table.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "3-not.json",
+            "question": "The keyword 'not' is used to return the negation of a boolean.\n\nConsider a table named Products where three vectors are defined:\n - Product\n - Color\n - Price\n\nDisplay a table with the products, their Color and a boolean \"Expensive Product\" that returns true if the price is higher than 5$.\n\nTable definition:\n  table Products = with\n    [| as Product, as Color, as Price |]\n    [| \"shirt\", \"white,grey\", 10.50 |]\n    [| \"pants\", \"blue\", 15.00 |]\n    [| \"hat\", \"red\", 5.25 |]\n    [| \"big hat\", \"red\", 20 |]\n    [| \"jeans\", \"blue\", 10 |]",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product  , as Color    , as Price |]\n  [| \"shirt\"     , \"white,grey\", 10.50    |]\n  [| \"pants\"     , \"blue\"      , 15.00    |]\n  [| \"hat\"       , \"red\"       , 5.25     |]\n  [| \"big hat\"   , \"red\"       , 20     |]\n  [| \"jeans\"     , \"blue\"      , 10     |]\n\nshow table \"Answer 1 - Products\" with\n  Products.Product\n  Products.Price > 5 as \"Expensive Product\"\n\nshow table \"Answer 2 - Products\" with\n  Products.Product\n  not (Products.Price <= 5) as \"Expensive Product\"\n",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 2: Found text but expected identifier. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "01-show.json",
+            "question": "Considering the table Input as given below, display the table\n table Input = with\n   [| as Car, as Color, as Price |]\n   [| \"Clio\", \"red\" , 25000|]\n   [| \"Clio\", \"green\" , 19000 |]\n   [| \"Megane\", \"yellow\" , 20000 |]\n   [| \"Megane\", \"yellow\" , 21000 |]\n   [| \"Megane\", \"black\" , 27000 |]\n   [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "table Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// display the 'Input' table with all its columns\nshow table \"Input\" with\n  Input.Car\n  Input.Color\n  Input.Price {unit: \"€\"}",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Stepwise Verification:**\n\n1. The solution correctly defines the table \"Input\" with columns Car, Color, and Price.\n2. The solution displays the \"Input\" table with all its columns: Car, Color, and Price.\n3. The Price column is displayed with the unit \"€\" as specified in the reference solution.\n\n**Defect Flagging:**\nNo logical flaws or deviations were found in the provided solution.\n\n**Final Judgment:**\nThe solution is correct and compliant with zero incorrect items.  \nTherefore, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "02-show.json",
+            "question": "Considering the table Input as given below, display the maximum price.\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000 |]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "table Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000 |]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\nmaxPrice = max(Input.Price)\n// display the maximum price as a scalar\nshow scalar \"Maximum Price\" {unit: \"€\"} with maxPrice\n\n//Because the operation is simple one can directly compute the result in the 'show' tile\nshow scalar \"Maximum Price\" {unit: \"€\"} with max(Input.Price)",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. **Logical Completeness:**\n   - The solution correctly identifies the maximum price from the \"Input\" table.\n   - It implements all the required components of the problem statement.\n   - Essential business rules are maintained.\n\n2. **Logical Consistency:**\n   - The data flow architecture is self-consistent.\n   - There are no contradictory conditionals present.\n\n3. **Verifiability:**\n   - Critical computation steps are traceable, with the calculation of the maximum price clearly shown.\n   - Key parameters, such as the \"Price\" column, are configurable and correctly utilized.\n\nBased on the analysis, the solution adheres to all the core principles and evaluation criteria. There are no flaws or deviations present.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "03-show.json",
+            "question": "Considering the table Input as given below, display an alert that checks if the table is empty.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "table Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// display the alert as an assert tile which will test the condition\nshow assert \"Check if table is empty\" with any(Input.*) as \"Input table is empty.\"",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 2: Found text but expected ',', '.' or '='. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "04-show.json",
+            "question": "Considering the table Input as given below, display a barchart comparing the average price per Car model.\n\ntable Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\", 25000 |]\n  [| \"Clio\", \"green\", 19000 |]\n  [| \"Megane\", \"yellow\", 20000 |]\n  [| \"Megane\", \"yellow\", 21000 |]\n  [| \"Megane\", \"black\", 27000 |]\n  [| \"Hummer\", \"gold\", 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "table Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\", 25000 |]\n  [| \"Clio\", \"green\", 19000 |]\n  [| \"Megane\", \"yellow\", 20000 |]\n  [| \"Megane\", \"yellow\", 21000 |]\n  [| \"Megane\", \"black\", 27000 |]\n  [| \"Hummer\", \"gold\", 150000 |]\n\n// display the barchart\n// use the stylecode {unit: \"$\"} to display the price currency\nshow barchart \"Average price per car\" with\n  avg(Input.Price) {unit: \"$\"}\n  group by Input.Car",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Stepwise Verification:**\n\n1. **Logical Completeness:**\n   - The solution correctly calculates the average price per Car model.\n   - It groups the data by Car and calculates the average Price for each Car.\n   - The essential components of the problem statement are implemented.\n\n2. **Logical Consistency:**\n   - The data flow architecture is self-consistent, with clear grouping by Car and calculation of average Price.\n   - There are no contradictory conditionals present in the solution.\n\n3. **Verifiability:**\n   - Critical computation steps are traceable, with the calculation of average Price per Car model.\n   - Key parameters, such as grouping by Car and averaging Price, are configurable and clearly defined.\n\n**Final Judgment:**\nConsidering the thorough analysis, the solution aligns with all the specified criteria without any flaws.  \nTherefore, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "05-show.json",
+            "question": "///Considering the table Input as given below, display a chart comparing the number of cars per Car model as a 'bar' series\n/// and the average price per Car model as a 'line' series.\n/// table Input = with\n///   [| as Car, as Color, as Price |]\n///   [| \"Clio\", \"red\" , 25000|]\n///   [| \"Clio\", \"green\" , 19000 |]\n///   [| \"Megane\", \"yellow\" , 20000 |]\n///   [| \"Megane\", \"yellow\" , 21000 |]\n///   [| \"Megane\", \"black\" , 27000 |]\n///   [| \"Hummer\", \"gold\" , 150000 |]",
+            "question_type": "coding",
+            "ground_truth": "table Input = with\n  [| as Car, as Color, as Price |]\n  [| \"Clio\", \"red\" , 25000|]\n  [| \"Clio\", \"green\" , 19000 |]\n  [| \"Megane\", \"yellow\" , 20000 |]\n  [| \"Megane\", \"yellow\" , 21000 |]\n  [| \"Megane\", \"black\" , 27000 |]\n  [| \"Hummer\", \"gold\" , 150000 |]\n\n// display the chart\n// use the {vaxis {right {unit: \"$\"}} to set a unit to the right axis\nshow chart \"Car information\" {vaxis { right { unit: \"$\" }}} with\n  // define the horizontal axis: the car model\n  haxis by Input.Car\n\n  // plot the different series\n  plot by Input.Car\n    // use the stylecode 'seriesType' to display the bars\n    count(Input.*) as \"# of cars\" {seriesType: bar}\n    // the 'line' seriesType is the default value so no stylecode needed\n    // use the stylecode {unit: \"$\"} to display the price currency\n    // use the stylecode {vaxis: right} to attach the series to the right axis\n    avg(Input.Price) as \"Average price\" {vaxis: right; unit: \"$\"}",
+            "ref": "lokad_raw_show_chart",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 11: Found 'group' but expected '>', '.', property-name, '..', number or '&'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "06-show.json",
+            "question": "Display a form where the number value 'maxPrice' - displayed as Maximum price - can be manually entered. The variables listed for display in this tile are expected to be attached scalar values obtained from a 'read form'.",
+            "question_type": "coding",
+            "ground_truth": "//initialise the variables with the 'read form' tile\nread form with\n  maxPrice : number\n\n//display the form\nshow form \"Parameters\" with\n  // we can't use the stylecode {unit: \"$\"} in a 'form' tile so we write the unit in the text name directly.\n  maxPrice as \"Maximum price ($):\"\n\n//we can also use the stylecode 'formButton' to add a run button to the form\nshow form \"Parameters\" {formButton: \"Save & Run\"} with\n  // we can't use the stylecode {unit: \"$\"} in a 'form' tile so we write the unit in the text name directly.\n  maxPrice as \"Maximum price ($):\"\n",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Stepwise Verification:**\n1. The solution reads a form with the variable `maxPrice` of type number - **Correct**\n2. The solution shows a form titled \"Enter Maximum price\" with the input field for `maxPrice` - **Correct**\n3. The additional reference initializes `maxPrice` as a number in the `read form` tile - **Correct**\n4. The additional reference displays the form with the title \"Parameters\" and labels the `maxPrice` input as \"Maximum price ($):\" - **Correct**\n5. The additional reference also demonstrates adding a run button to the form - **Correct**\n\n**Defect Flagging:** None\n\n**Final Judgment:** 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "01-where.json",
+            "question": "01-where\n\nThe keyword \"where\" generally denotes a table being filtered in Envision.\n\nConsider a table named Products where three vectors are defined:\n  - Product\n  - Color\n  - Price\n\nRewrite vector \"Color\" so that when the original value contains a comma, only the first string before the comma is kept.",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product, as Color, as Price |]\n  [| \"shirt\", \"white,grey\", 10.50 |]\n  [| \"pants\", \"blue\", 15.00 |]\n  [| \"hat\", \"red\", 5.25 |]\n\nwhere contains(Products.Color,\",\")\n  Products.Color = field(Products.Color,\",\",0)",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 7: Unknown function 'before', did you mean 'forex' ? (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "02-where.json",
+            "question": "///02-where - Filtering a dimension and several tables\n\n/// The keyword \"where\" generally denotes a table being filtered in Envision\n\n/// Consider table named \"Products\" where three vectors are defined:\n///  - Product\n///  - Color\n///  - Price\n/// And table \"Orders\" containing columns OrderDate, Id, Product, Qty and Amount.\n/// Rewrite vector \"Amount\" for hat only, Ref == 3, using column \"Price\" from \"Products\" table.\n\n/// Note: expect Orders.Ref = Orders.Id",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Products [Ref] = with\n  [| as Ref , as Product, as Color    , as Price |]\n  [|    1   , \"shirt\"   , \"white,grey\", 10.50    |]\n  [|    2   , \"pants\"   , \"blue\"      , 15.00    |]\n  [|    3   , \"hat\"     , \"red\"       , 5.25     |]\n\ntable Orders = with\n  [| as OrderDate    , as Id , as Product, as Qty      , as Amount |]\n  [| date(2024,1,18) ,   1    , \"shirt\"   ,   1         , 10.50    |]\n  [| date(2024,3,15) ,   1    , \"shirt\"   ,   2         , 21.00    |]\n  [| date(2024,7,21) ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,8,6)  ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,9,19) ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,10,4) ,   3    , \"hat\"     ,   3         , 18.00    |]\n\nexpect Orders.Ref = Orders.Id\n\nwhere Ref == 3 // This filter all tables containing Dimension \"Ref\"\n  Orders.Amount = Orders.Qty * same(Products.Price) by Products.Ref at Orders.Ref\n```",
+            "ref": "lokad_raw_where",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Following the evaluation framework rigorously, let's assess the provided solution step by step:\n\n### Step 1: Logical Completeness\n- The solution correctly filters the \"Orders\" table based on the condition `Orders.Product == \"Hat\"`.\n- It rewrites the \"Amount\" vector for the specified condition using the \"Price\" column from the \"Products\" table.\n- The solution implements all required components of the problem statement.\n\n### Step 2: Logical Consistency\n- The data flow architecture is self-consistent, with a clear flow from filtering the \"Orders\" table to updating the \"Amount\" vector based on the condition.\n- There are no contradictory conditionals present in the solution.\n\n### Step 3: Verifiability\n- Critical computation steps are traceable, with the calculation of `Orders.Amount = single(Products.Price) by Products.Product at Orders.Product * Orders.Qty` clearly defined.\n- Key parameters such as the filtering condition and the calculation method are configurable.\n\n### Decision:\nBased on the evaluation, the solution meets all the criteria for Logical Completeness, Logical Consistency, and Verifiability. Therefore, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "03-where.json",
+            "question": "03-where - Multiple where\n\nThe keyword \"where\" generally denotes a table being filtered in Envision\n\nConsider table named \"Products\" where three vectors are defined:\n  - Product\n  - Color\n  - Price\nAnd table \"Orders\" containing columns OrderDate, Id, Product, Qty and Amount.\nRewrite vector \"Amount\" for Ref == 3 (Product == \"hat\"), and only if Qty sold was greater or equal than 3 by applying 5% discount on Amount.",
+            "question_type": "coding",
+            "ground_truth": "table Products [Ref] = with\n  [| as Ref , as Product, as Color    , as Price |]\n  [|    1   , \"shirt\"   , \"white,grey\", 10.50    |]\n  [|    2   , \"pants\"   , \"blue\"      , 15.00    |]\n  [|    3   , \"hat\"     , \"red\"       , 5.25     |]\n\ntable Orders = with\n  [| as OrderDate    , as Id , as Product, as Qty      , as Amount |]\n  [| date(2024,1,18) ,   1    , \"shirt\"   ,   1         , 10.50    |]\n  [| date(2024,3,15) ,   1    , \"shirt\"   ,   2         , 21.00    |]\n  [| date(2024,7,21) ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,8,6)  ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,9,19) ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,10,4) ,   3    , \"hat\"     ,   3         , 15.75    |]\nexpect Orders.Ref = Orders.Id\n\nwhere Ref == 3 // This filter all tables containing Dimension \"Ref\"\n  where Orders.Qty >= 3\n    Orders.Amount = (1 - 0.05) * (Orders.Amount)",
+            "ref": "where-03",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Based on the evaluation framework provided, let's analyze the solution step by step:\n\n### Step 1: Logical Completeness\n- The solution correctly filters the Orders table for Product \"hat\" and Qty greater than or equal to 3.\n- It applies a 5% discount to the Amount for the filtered rows.\n\n### Step 2: Logical Consistency\n- The data flow architecture is self-consistent, with the correct filtering conditions applied in a nested manner.\n- There are no contradictory conditionals present in the solution.\n\n### Step 3: Verifiability\n- Critical computation steps are traceable, with clear filtering conditions and discount calculation.\n- The key parameter for filtering (Product == \"hat\" and Qty >= 3) is configurable and correctly implemented.\n\n### Decision\nBased on the evaluation, the solution adheres to all the core principles and acceptable variations. There are no unacceptable flaws present in the solution.\n\n### Final Judgment\nConsidering all the above points, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "04-where.json",
+            "question": "04-where - keep where\n\nThe keyword \"where\" generally denotes a table being filtered in Envision.\nUsing \"keep where\" also filters one or several but avoiding indentation.\n\nConsider table named \"Products\" where three vectors are defined:\n - Product\n - Color\n - Price\nRemove all occurences of \"Ref\" == \"3\" in all tables with \"Ref\" dimension.\nThen display the tables",
+            "question_type": "coding",
+            "ground_truth": "table Products [Ref] = with\n  [| as Ref , as Product, as Color    , as Price |]\n  [|    1   , \"shirt\"   , \"white,grey\", 10.50    |]\n  [|    2   , \"pants\"   , \"blue\"      , 15.00    |]\n  [|    3   , \"hat\"     , \"red\"       , 5.25     |]\n\ntable Orders = with\n  [| as OrderDate    , as Id , as Product, as Qty      , as Amount |]\n  [| date(2024,1,18) ,   1    , \"shirt\"   ,   1         , 10.50    |]\n  [| date(2024,3,15) ,   1    , \"shirt\"   ,   2         , 21.00    |]\n  [| date(2024,7,21) ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,8,6)  ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,9,19) ,   2    , \"pants\"   ,   1         , 15.00    |]\n  [| date(2024,10,4) ,   3    , \"hat\"     ,   3         , 15.75    |]\nexpect Orders.Ref = Orders.Id\n\nkeep where Ref != 3 // This filter all tables containing Dimension \"Ref\"\n\nshow table \"Products\" with\n  Products.Ref\n  Products.Product\n  Products.Color\n  Products.Price\n\nshow table \"Orders\" with\n  Orders.Ref\n  Orders.Id\n  Orders.Product\n  Orders.Qty\n  Orders.Amount",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The provided solution defines a table named \"Products\" with columns Product, Color, Price, and Ref.\n2. It then filters out all rows where the Ref column is equal to 3 using the \"keep where\" statement.\n3. The solution displays the filtered table \"Filtered Products\" with columns Product, Color, Price, and Ref.\n\n**Evaluation:**\n\n- **Dimension 1: Logical Completeness**\n  - The solution implements all required components of the problem statement by filtering out rows with Ref == 3.\n  - It maintains the essential business rule of removing specific entries based on the Ref column.\n\n- **Dimension 2: Logical Consistency**\n  - The data flow architecture is self-consistent, with a clear filtering step followed by displaying the filtered table.\n  - There are no contradictory conditionals present in the provided solution.\n\n- **Dimension 3: Verifiability**\n  - The critical computation step of filtering based on the Ref column is traceable and clearly defined.\n  - Key parameter \"Ref != 3\" is configurable and can be adjusted based on different filtering criteria.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "01-write.json",
+            "question": "///01-write : basic write\n\n/// The keyword write introduces a block used to define a section of vectors, associated to a given table,\n/// to be persisted as a flat file stored in file hosting service named BigFiles.\n\n/// Consider table named Products where three vectors are defined :\n///  - Product\n///  - Color\n///  - Price\n/// Store this a table with its three vectors on BigFiles in a repertory clean.",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nwrite Products as \"/clean/Products.ion\" with\n  Product = Products.Product\n  Color = Products.Color\n  Price = Products.Price",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Step 1: **Logical Completeness**  \n- The solution defines a table named Products with three vectors: Product, Color, and Price.  \n- It specifies the data for each vector within the table.  \n- The write block is used to persist the table as a flat file in BigFiles.  \n- The write block specifies the file path and maps the vectors to their respective columns in the output file.  \n\nStep 2: **Logical Consistency**  \n- The data flow is consistent, with vectors Product, Color, and Price being correctly mapped to their corresponding columns in the output file.  \n- There are no contradictory conditionals present in the solution.  \n\nStep 3: **Verifiability**  \n- The critical computation steps are traceable, with clear mapping of vectors to columns in the output file.  \n- Key parameters such as the file path and vector-column mappings are configurable.  \n\n**Final Judgment:**  \nThe solution is logically correct and compliant with the provided problem statement and reference solution.  \nTherefore, the final judgment is 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "02-write.json",
+            "question": "02-write - basic write with column renaming\n\nThe keyword write introduces a block used to define a section of vectors, associated to a given table, to be persisted as a flat file stored in file hosting service named BigFiles.\n\nConsider a table named Products where three vectors are defined:\n - Product\n - Color\n - Price\n\nStore this table with its three vectors on BigFiles in a repertory clean by changing the vector named Product into Article.",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nwrite Products as \"/clean/Products.ion\" with\n  Article = Products.Product\n  Color = Products.Color\n  Price = Products.Price",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 2,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. **Logical Completeness:**\n   - The solution renames the vector \"Product\" to \"Article\" as required.\n   - It includes all three vectors (Article, Color, Price) in the write operation.\n   - The table structure and data are correctly defined.\n\n2. **Logical Consistency:**\n   - The data flow is consistent, mapping the original vectors to the new names accurately.\n   - There are no contradictory conditionals present in the solution.\n\n3. **Verifiability:**\n   - Critical computation steps are traceable, with clear assignments of vectors to new names.\n   - The key parameter for the write operation (\"BigFiles:/clean/products.csv\") is configurable and matches the problem statement.\n\nBased on the analysis, the solution aligns with all the provided requirements and guidelines without any flaws. Therefore, the final judgment is:\n\n**1 - Correct**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "03-write.json",
+            "question": "///03-write - write using a schema\n\n/// The keyword write introduces a block used to define a section of vectors, associated to a given table,\n/// to be persisted as a flat file stored in file hosting service named BigFiles.\n\n/// Consider a table named Products where three vectors are defined :\n///  - Product\n///  - Color\n///  - Price\n///  Store this table with its three vectors on BigFiles in a repertory clean by changing vector named Product into Article.\n///  Use a schema with columns \"Article\", \"Color\" and \"Price\"",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nschema Products with\n  Article : text\n  Color : text\n  Price : number\n\nwrite Products as \"/clean/Products.ion\" with\n  schema Products with\n    Article = Products.Product",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "1. **Logical Completeness**  \n   - The solution implements all required components of the problem statement by defining the schema, creating the table with the specified vectors, and using the `write` keyword to persist the data in a flat file.\n   - The table is stored in BigFiles with the vectors \"Article\", \"Color\", and \"Price\" as required.\n\n2. **Logical Consistency**  \n   - The data flow architecture is self-consistent with the defined schema and table structure.\n   - There are no contradictory conditionals present in the solution.\n\n3. **Verifiability**  \n   - Critical computation steps are traceable from defining the schema to writing the data to the file.\n   - Key parameters such as the file path and schema are configurable and correctly utilized.\n\nBased on the evaluation against the provided framework, the solution is logically correct and compliant with the requirements without any flaws.  \n\n### Final Judgment: 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "04-write.json",
+            "question": "///04-write - write using a schema and a patch schema\n\n/// The keyword write introduces a block used to define a section of vectors, associated to a given table,\n/// to be persisted as a flat file stored in file hosting service named BigFiles.\n\n/// Consider a table named Products where three vectors are defined :\n///  - Product\n///  - Color\n///  - Price\n///  Store this table with its three vectors on BigFiles in a repertory clean by changing vector named Product into Article.\n///  Use a schema with columns \"Article\", \"Color\" and \"Price\"\n///  Use a path schema",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nschema Products with\n  Article : text\n  Color : text\n  Price : number\n\nschema '/clean/Products.ion' with\n  schema Products\n\nwrite Products as '/clean/Products.ion' with\n  Article = Products.Product",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 12: Undefined variable 'Scalar.Article'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "05-write.json",
+            "question": "05-write - write several files using \"partitioned\" keyword\n\nThe keyword \"write\" introduces a block used to define a section of vectors, associated to a given table, to be persisted as a flat file stored in file hosting service named BigFiles. The contextual keyword \"partitioned\" modifies the behavior of the write block: several files can be written at once.\n\nConsider a table named Products where three vectors are defined:\n - Product\n - Color\n - Price\nStore the data in the Products table into several files partitioned by the Color vector on BigFiles in a clean repertory.\nUse a schema with columns \"Product\", \"Color\" and \"Price\" and a path schema that uses the Color vector for partitioning.",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nschema Products with\n  Product : text\n  Color : text\n  Price : number\n\nschema '/clean/Products_{Color}.ion' with\n  schema Products\n\nwrite Products partitioned as '/clean/Products_{..}.ion'",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 3,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The provided solution defines a schema for storing data in BigFiles with columns Product, Color, and Price.\n2. The Products table is populated with sample data including Product names, Color, and Price.\n3. The `write` statement is used to write the data from the Products table partitioned by Color into multiple files in BigFiles.\n\n**Evaluation:**\n\n1. **Logical Completeness:**\n   - The solution implements all required components of the problem statement.\n   - It stores the data in multiple files partitioned by the Color vector as specified.\n\n2. **Logical Consistency:**\n   - The data flow architecture is self-consistent with the use of the Color vector for partitioning.\n   - There are no contradictory conditionals present in the solution.\n\n3. **Verifiability:**\n   - Critical computation steps, such as partitioning by Color, are traceable in the solution.\n   - Key parameters, such as the path schema using the Color vector for partitioning, are configurable.\n\n**Final Judgment:**\nThe solution adheres to the problem requirements and evaluation criteria without any flaws.  \nTherefore, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "06-write.json",
+            "question": "///06-write - write several files using \"partitioned\" keyword and bounds\n\n/// The keyword \"write\" introduces a block used to define a section of vectors, associated to a given table,\n/// to be persisted as a flat file stored in file hosting service named BigFiles.\n/// The contextual keyword \"partitioned\" modifies the behavior of the write block: several files can be written at once.\n\n/// Consider a table named Products where three vectors are defined :\n///  - Product\n///  - Color\n///  - Price\n///  Store the data in \"Products\" table into several tables partitioned by \"Color\" values on BigFiles in a repertory clean.\n///  Use a schema with columns \"Product\", \"Color\" and \"Price\"\n///  Use a path schema with vector \"Color\" as the one use for partitioning\n///  Do not export tables where \"Color\" values are alphabetically lower than \"d\"",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nschema Products with\n  Product : text\n  Color : text\n  Price : number\n\nschema '/clean/Products_{Color}.ion' with\n  schema Products\n\nletter_d = \"d\"\nwhere Products.Color > letter_d\n  write Products partitioned as '/clean/Products_{letter_d..}.ion'\n/// this line would write as many files as there are different values in \"Color\" vector, there is a technical limit at 200 files maximum.\n/// this line would would also erase all files matching path '/clean/Products_*.ion' where * is a \"Color\" value alphabetically greater than \"d\"",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 13: Undefined variable 'Scalar.d'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "07-write.json",
+            "question": "///07-write - write several files using \"partitioned\" keyword and bounds\n\n/// The keyword \"write\" introduces a block used to define a section of vectors, associated to a given table,\n/// to be persisted as a flat file stored in file hosting service named BigFiles.\n/// The contextual keyword \"partitioned\" modifies the behavior of the write block: several files can be written at once.\n\n/// Consider a table named Products where three vectors are defined:\n///  - Product\n///  - Color\n///  - Price\n/// Store the data in \"Products\" table into several tables partitioned by \"Color\" values on BigFiles in a repertory clean.\n/// Use a schema with columns \"Product\", \"Color\" and \"Price\"\n/// Use a path schema with vector \"Color\" as the one use for partitioning\n/// Do not export tables where \"Color\" values are alphabetically greater than \"d\"",
+            "question_type": "coding",
+            "ground_truth": "table Products = with\n  [| as Product, as Color    , as Price |]\n  [| \"shirt\"   , \"white,grey\", 10.50    |]\n  [| \"pants\"   , \"blue\"      , 15.00    |]\n  [| \"hat\"     , \"red\"       , 5.25     |]\n\nschema Products with\n  Product : text\n  Color : text\n  Price : number\n\nschema '/clean/Products_{Color}.ion' with\n  schema Products\n\nletter_d = \"d\"\nwhere Products.Color < letter_d\n  write Products partitioned as '/clean/Products_{..letter_d}.ion'\n\n/// this line would write as many files as there are different values in \"Color\" vector, there is a technical limit at 200 files maximum.\n/// this line would also erase all files matching path '/clean/Products_*.ion' where * is a \"Color\" value alphabetically lower than \"d\".",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 13: Undefined variable 'Scalar.a'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "c000.json",
+            "question": "Define a text literal called greetings with value \"Hello\" and display greetings on the dashboard as a label.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ngreetings = \"Hello\" // define the text literal\nshow label greetings // show the text literal as a label. There should be no 'with' !\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Stepwise Verification:**\n1. **Logical Completeness:**\n   - The solution defines a text literal `greetings` with the value \"Hello\".\n   - The solution displays the `greetings` text literal on the dashboard as a label.\n   - The solution implements all required components of the problem statement.\n   - The solution maintains the essential business rule of displaying the text literal as a label.\n\n2. **Logical Consistency:**\n   - The data flow architecture is self-consistent, with the defined text literal being displayed as a label.\n   - There are no contradictory conditionals present in the solution.\n\n3. **Verifiability:**\n   - Critical computation steps are traceable, with the definition and display of the text literal being clear.\n   - Key parameters, such as the text literal value and its display as a label, are configurable.\n\n**Final Judgment:**\nThe solution adheres to all the core principles and evaluation criteria. It is logically correct, complete, consistent, and verifiable.\n\n**Decision: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c001.json",
+            "question": "Create a table named `T` that contains 3 lines. There must be column named `X` that contains the values `a`, `b` and `c`. Put this table on display.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable T = with // hard-coding a table\n  [| as X |] // column header\n  [| \"a\" |]\n  [| \"b\" |]\n  [| \"c\" |]\n\n// displaying the 3 values\nshow table \"My Title\" with T.X\n```",
+            "ref": "relational-algebra_index",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The solution creates a table named `T` with a column `X` containing values `a`, `b`, and `c`.\n   \n2. The table is displayed with the title \"My Title\" and the values from column `X`.\n\n**Final Judgment:**\nThe solution is correct and compliant with zero incorrect items.  \nTherefore, the final judgment is: 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c002.json",
+            "question": "Create a table `T` that has 3 lines, then create a filter that only keeps 2 lines, and display all the filtered table's content.",
+            "question_type": "coding",
+            "ground_truth": "A correct answer must have `show table` indented with 2 whitespaces after the `where` statement, as done below:\n\n```envision\ntable T = with // hard-coding a table\n  [| as X |] // column header\n  [| \"a\" |]\n  [| \"b\" |]\n  [| \"c\" |]\n\nwhere T.X != \"a\" // filter T, exclude 1 line\n  // displaying the 2 values\n  show table \"Filtered\" with T.X \n  // Must be a show table command, not show label.\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Following the evaluation framework rigorously:\n\n1. **Logical Completeness**  \nThe solution creates a table `T` with 3 lines and applies a filter to keep only lines where `N` is greater than 1. It then displays the content of the filtered table. The solution implements all required components of the problem statement and maintains essential business rules.\n\n2. **Logical Consistency**  \nThe data flow architecture is self-consistent, and there are no contradictory conditionals present in the solution.\n\n3. **Verifiability**  \nThe critical computation steps are traceable, and key parameters like the filter condition are configurable.\n\nBased on the analysis, the solution meets all the criteria outlined in the evaluation framework. Therefore, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c003.json",
+            "question": "Considering the table `Orders` as given below, compute the total inventory value for all SKUs (using the price as value indicator), then display the total. You need to copy the given code at the beginning of your output, and then write your own code.\n\n```envision\ntable Orders = with\n  [| as Sku, as Qty, as UnitPrice |]\n  [| \"a\",    5     , 1.5          |]\n  [| \"b\",    3     , 7.0          |]\n  [| \"b\",    1     , 2.0          |]\n  [| \"c\",    7     , 5.7          |]\n```",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Orders = with\n  [| as Sku, as Qty, as UnitPrice |]\n  [| \"a\",    5     , 1.5          |]\n  [| \"b\",    3     , 7.0          |]\n  [| \"b\",    1     , 2.0          |]\n  [| \"c\",    7     , 5.7          |]\n// the above definition should be exactly as shown.\n\n// next we do line-wise multiply\nOrders.Value = Orders.Qty * Orders.UnitPrice\n\n// aggregate from 'Orders' table into the scalar table :\ntotalValue = sum(Orders.Value)\n\n// display the result\nshow scalar \"Total Value\" with totalValue\n```\n\n//it is acceptable to shorten the code writing instead `show scalar \"Total Value\" with sum(Orders.Qty * Orders.UnitPrice)`.",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "1. **Logical Completeness**  \nThe solution correctly computes the inventory value for each SKU by multiplying the quantity with the unit price and then sums up these values to get the total inventory value. It implements all the required components of the problem statement and maintains the essential business rule of calculating the total inventory value accurately.\n\n2. **Logical Consistency**  \nThe data flow architecture is self-consistent, with clear steps to calculate the inventory value for each SKU and then aggregate these values to get the total. There are no contradictory conditionals present in the solution.\n\n3. **Verifiability**  \nThe critical computation steps are traceable, starting from calculating the inventory value for each SKU to aggregating them for the total value. The key parameter, which is the total inventory value, is configurable and displayed at the end.\n\n**Decision:**  \nThe solution adheres to all the core principles and evaluation criteria. It is logically correct, consistent, and verifiable.\n\n**Final Judgment:** 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c004.json",
+            "question": "Let's display, as text, an expression \"y = a * x + b\" where `a` and `b` are replaced by their numerical values. The goal is to have the text composed dynamically based on the number values of `a` and `b`. Here, for the sake of the example, take `a = 13` and `b = 7`.",
+            "question_type": "coding",
+            "ground_truth": "// Define the variables 'a' and 'b'. they must have 13 and 7 as value.\na = 13\nb = 7\n\n// Beware, don't forget the `\\` for the interpolation. use {} to convert numerical value to text.\nexpr = \"y = \\{a} * x + \\{b}\"\n\n// Alternatively, it can also be done with concatenation \nexpr = concat(\"y = \", text(a), \" * x + \", text(b))\n\n// Display the expression\nshow scalar \"My Expression\" with expr\n\n// Alternatively, you can also write:\nshow label expr",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. **Logical Completeness:**\n   - The solution correctly defines the variables `a` and `b` with the values 13 and 7 respectively.\n   - It dynamically composes the expression \"y = a * x + b\" using the numerical values of `a` and `b`.\n   - The solution displays the expression as text using the correct formatting.\n\n2. **Logical Consistency:**\n   - The data flow is self-consistent, with the variables `a` and `b` being used in the expression as intended.\n   - There are no contradictory conditionals present in the solution.\n\n3. **Verifiability:**\n   - Critical computation steps are traceable, from defining the variables to displaying the final expression.\n   - Key parameters, such as the values of `a` and `b`, are configurable and clearly defined.\n\nBased on the analysis, the solution adheres to all the core principles and acceptable variations. It is logically correct, complete, consistent, and verifiable.\n\n**Final Judgment: 1 (Correct)**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c005.json",
+            "question": "What are the values of A, B and C as computed by the script below?\n\n```envision\ntable T = with\n  [| as X |]\n  [| 1 |]\n  [| 2 |]\n  [| 3 |]\n\nwhere T.X != 2\n  show scalar \"A\" with sum(T.X) // ?\n\n  where T.X != 1\n    show scalar \"B\" with sum(T.X)  // ?\n\nshow scalar \"C\" with sum(T.X)  // ?\n```",
+            "question_type": "QA",
+            "ground_truth": "The value A is computed within the first `where` block, due to the 2-whitespace indent, which filters out the value 2. Thus, we have the values 1 and 3 left. Thus, A = 1 + 3 = 4.\n\nThe value B is computed within the two nested `where` block, due to the 4-whitespace indent, which are filtering out the value 2 (first filter) and the value 1 (second filter). Thus, we only have the value 3 left. Thus, B = 3.\n\nThe value C is computed outside any `where` block, as there is no indent, thus all 3 values are included. Thus, C = 1 + 2 + 3 = 6.\n\nIn summary:\n\n* A = 4\n* B = 3\n* C = 6",
+            "ref": "",
+            "compilation_result": null,
+            "compilation_attempts": null,
+            "judgment": "correct",
+            "judge_output": "1",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c006.json",
+            "question": "Define a table T with 5 names with corresponding score. Show the maximum of these 5 scores at the tile a1b2, together with the name that achieves this best score at c1d2.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable T = with \n  [| as name, as score |] \n  [| \"Sally\",98 |]\n  [| \"Mike\",79 |]\n  [| \"Andrew\",70 |]\n  [| \"Nathan\",80 |]\n  [| \"John\",93 |]\nx=max(T.score) //Get the max of the scores\n\n//Beware, for argmax, the 1st argument is the value to compare, the 2nd argument is the index that we want to know\nbestname=argmax(T.score,T.name)\n\nshow label \"best score:{x}\" a1b2\nshow label \"best student:{bestname}\" c1d2\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 10: Found '=' but expected 'into', operator5, operator4, operator3, operator2, operator1, operator0, '[', '(' or end-of-line. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "c007.json",
+            "question": "Define a table Students with 5 names, each associated to a teacher and a score. 3 of the 5 students should follow the teacher named \"John Doe\". Add a column to the Students table to indicate if a student is successful. A student is regarded successful if the score is strictly greater than 79. In a table, show John Doe's successful students' information, including their mean score, their best score and the student that achieves the best score.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Students = with\n  [| as name, as teacher, as score |]\n  [| \"Sally\",\"John Doe\",98 |]\n  [| \"Mike\",\"John Doe\",79 |]\n  [| \"Andrew\",\"Manuel Joffre\",70 |]\n  [| \"Nathan\",\"Marie Curie\",80 |]\n  [| \"John\",\"John Doe\",93 |]\n\nStudents.success = if Students.score > 79 then true else false // acceptable but too long\nStudents.success = Students.score > 79 // the shorter version\n\n// add a filter. The 2-space start-of-line is mandatory to mark the field of the filter.\nwhere Students.teacher == \"John Doe\"  and Students.success\n  meanscore = mean(ranvar(Students.score)) \n  Mascon = max(Students.score) \n  bestname = argmax(Students.score, Students.name)\n  success_count=count(Students.success) // count shall always be deployed on a boolean column.\n\n// show the information as a table\nshow table \"John Doe's students' info\" with \n  success_count as \"successful students count\" \n  meanscore as \"mean\"\n  Maxscore as \"maxscore\"\n  bestname as \"best student\"\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 11: Found identifier but expected 'into', operator5, operator4, operator3, operator2, operator1, operator0, end-of-line or 'where'. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "c008.json",
+            "question": "Create a table Catalog containing different items Name and their color. \"red\" should be a color cited. Create another table containing the same dimension but only with the red items. Show the Name of the red items.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Catalog = with \n  [| as Name, as Color |]\n  [| \"Socks\" , \"red\"    |]\n  [| \"Socks\" , \"blue\"   |]\n  [| \"Shirt\" , \"red\"    |] \n \ntable smallCatalog = where Catalog.Color==\"red\" // broadcast during definition\n \nshow table \"red items\" with\n  smallCatalog.Name\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 3,
+            "judgment": "correct",
+            "judge_output": "Following the evaluation framework provided:\n\n### Stepwise Verification:\n1. **Logical Completeness**:\n   - The solution creates a table `Catalog` with items and colors.\n   - It then creates another table `RedItems` containing only the items with the color \"red\".\n   - Finally, it shows the names of the red items.\n\n2. **Logical Consistency**:\n   - The data flow is consistent, filtering items correctly based on the color.\n   - There are no contradictory conditionals present.\n\n3. **Verifiability**:\n   - Critical computation steps are traceable, with clear filtering based on color.\n   - The key parameter, color \"red\", is configurable and used consistently.\n\n### Decision:\nBased on the evaluation, the solution meets all the criteria outlined in the evaluation framework. Therefore, the final judgment is:\n\n**1 - Correct**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c009.json",
+            "question": "Create a table Catalog containing 2 columns : \"item\" and their \"itemcolor\". Create another table ColorPrices that associates a \"color\" to its \"price\" (we assume that each item of same color has same price). All colors figuring in \"itemcolor\" column of Catalog should show up in the color column of ColorPrices. Add a column \"itemprice\" to Catalog containing the price of each item in Catalog. Show each item in Catalog with their price. You are not allowed to use filter; use primary dimension to index ColorPrices by color.",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Catalog = with // it is optional to index Catalog by item\n  [| as item, as itemcolor |]\n  [| \"Shirt\", \"red\" |]\n  [| \"Hat\", \"blue\" |]\n  [| \"Shoes\", \"red\" |]\n  [| \"Pants\", \"green\" |]\n\n// declare a primary dimension \"color\" by []\ntable ColorPrices[color] = with\n  [| as color, as price|]\n  [|   \"red\",  15      |]\n  [|   \"green\",  10      |]\n  [|   \"blue\",  8      |]\n\n// add column containing itemprice\nCatalog.itemprice=ColorPrices.price[Catalog.itemcolor]// beware, first take the price column, then index by itemcolor. Reversing the order is wrong.\n\n// Show the Price of the items\nshow table \"Red Items\" a1b3 with\n  Catalog.item as \"Item\"\n  Catalog.itemprice as \"Price\"\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 11: Found '.' but expected '=' or end-of-line. (Severity: Error)",
+                    "Line 11: Unknown type 'catalog. (Severity: Error)",
+                    "Line 12: Unknown type 'catalog. (Severity: Error)",
+                    "Line 13: Unknown type 'colorprices. (Severity: Error)",
+                    "Line 16: Unknown type 'colorprices. (Severity: Error)",
+                    "Line 17: Unknown type 'colorprices. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "c010.json",
+            "question": "Create a table Catalog containing 3 columns : 10 \"item\"s and their \"OrderDate\" and \"DeliveryDate\" (the dates should be in date data type). Define a new column \"Leadtime\" for each item. Finally, show the table containing each item with their Leadtime, but only for those with Leadtime longer than 20 days.",
+            "question_type": "coding",
+            "ground_truth": "```envision\n  table Catalog = with\n  [| as Item, as OrderDate, as DeliveryDate |]\n  [| \"item1\", date(2022, 1, 1), date(2022, 1, 15) |]\n  [| \"item2\", date(2022, 2, 5), date(2022, 2, 20) |]\n  [| \"item3\", date(2022, 3, 10), date(2022, 3, 30) |]\n  [| \"item4\", date(2022, 4, 15), date(2022, 5, 5) |]\n  [| \"item5\", date(2022, 5, 20), date(2022, 6, 10) |]\n  [| \"item6\", date(2022, 6, 25), date(2022, 7, 20) |]\n  [| \"item7\", date(2022, 7, 30), date(2022, 8, 25) |]\n  [| \"item8\", date(2022, 8, 5), date(2022, 8, 30) |]\n  [| \"item9\", date(2022, 9, 10), date(2022, 9, 30) |]\n  [| \"item10\", date(2022, 10, 15), date(2022, 11, 5) |]\n\nCatalog.Leadtime = Catalog.DeliveryDate - Catalog.OrderDate // the date Leadtime is calculated by DeliveryDate - OrderDate\n\nwhere Catalog.Leadtime > 20  // since Leadtime is in date data type, it can be directly compared to a number.\n  show table \"Items with Leadtime > 20 days\" a1c11 with  // the filter must be done by must a two-block indentation under the where statement.\n    Catalog.Item\n    Catalog.Leadtime\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 19: Found 'where' but expected boolean, number, dedent, 'order', 'group', 'enum', 'schema', identifier, markdown template start, text interpolation, '(', 'if', unaryoperator or text. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "c011.json",
+            "question": "Define a ranvar corresponding to the poisson probability distribution with the parameter 5, and display it as a scalar",
+            "question_type": "coding",
+            "ground_truth": "```envision\nr = poisson(5) // define the probability distribution\nshow scalar \"Poisson probability distribution\" a1b3 with\n  r\n// Displaying the probability distribution as a scalar\n\n//it is acceptable to shorten the code writing instead `show scalar \"Poisson probability distribution\" a1b3 with poisson(5)`.",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Based on the provided answer and additional reference, let's evaluate the solution according to the defined framework:\n\n### Stepwise Verification:\n1. **Logical Completeness:**\n   - The solution correctly defines a random variable corresponding to the Poisson probability distribution with a parameter of 5.\n   - It displays the Poisson distribution as a scalar.\n   - The essential components of the problem statement are implemented.\n\n2. **Logical Consistency:**\n   - The data flow architecture is self-consistent.\n   - There are no contradictory conditionals present.\n\n3. **Verifiability:**\n   - Critical computation steps are traceable.\n   - Key parameters are configurable.\n\n### Decision:\nConsidering the evaluation based on the framework provided:\n- The solution is logically complete, consistent, and verifiable.\n- It adheres to the core principles and acceptable variations.\n  \nTherefore, the final judgment is:  \n**1 - Correct**",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c012.json",
+            "question": "Define a table Orders containing two columns named \"Dates\" and \"Quantity\" and 10 rows. The column \"Dates\" must contain dates included between 01/01/2024 and 05/01/2024, and the column \"Quantity\" must contain arbitrary integers.\nShow a piechart containing the quantity per day in the table Orders",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Orders = with\n  [| as Dates, as Quantity |]\n  [| date(2024, 1, 1), 3 |]\n  [| date(2024, 1, 3), 9 |]\n  [| date(2024, 1, 4), 5 |]\n  [| date(2024, 1, 2), 2 |]\n  [| date(2024, 1, 2), 6 |]\n  [| date(2024, 1, 5), 4 |]\n  [| date(2024, 1, 1), 6 |]\n  [| date(2024, 1, 4), 2 |]\n  [| date(2024, 1, 3), 7 |]\n  [| date(2024, 1, 3), 5 |]\n\nshow piechart \"Quantity per Day\" a1c6 with // Displaying the quantity per day in a piechart\n  sum(Orders.Quantity)\n  group by Orders.Dates \n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": false,
+                "messages": [
+                    "Line 14: 'show piechart' expects exactly one column. (Severity: Error)"
+                ]
+            },
+            "compilation_attempts": 3,
+            "judgment": null,
+            "judge_output": null,
+            "judge_attempts": null,
+            "final_state": "compilation error"
+        },
+        {
+            "challenge_path": "c013.json",
+            "question": "We will consider a time span from 01/Jan/2005 to 31/Jan/2005. Create a table `Products` with 3 columns `Name`, `Origin` and `Factor` of several rows. Then, cross the table `Product` with `date`. Make up a column `Quantity` to the crossed table by each product.",
+            "question_type": "coding",
+            "ground_truth": "```envision\n\nkeep span date = [ date(2005, 1, 1) .. date(2005, 1, 31) ]\n\ntable Products = with\n  [| as Name, as Origin,   as Factor |]\n  [| \"banana\",   \"Morocco\",    1.6     |]\n  [| \"apple\",    \"France\",     2.1      |]\n  [| \"orange\",   \"Germany\",    2.3     |]\n  [| \"melon\",    \"China\",      2.7     |]\n  \ntable PD = cross(Products, Day)\n \n// Made-up quantities varying per product and per date\n// Products.Price and date is broadcasted to the cross table PD\nPD.Quantity = (date - date(2005, 1, 1)) * Products.Factor\n```",
+            "ref": "",
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "**Step by Step Analysis:**\n\n1. The provided solution creates a table `Products` with columns `Name`, `Origin`, and `Factor` with several rows. This step is correctly implemented.\n   \n2. The solution defines a time span from 01/Jan/2005 to 31/Jan/2005 using the `keep span date` statement. This aligns with the problem statement.\n\n3. The solution then performs a cross join between the `Products` table and the `Day` table, creating a new table `P`. This step is logically sound.\n\n4. Finally, the solution calculates the `Quantity` column in the `P` table based on the difference in dates multiplied by the `Factor` from the `Products` table. This calculation is consistent with the problem requirements.\n\n**Final Judgment: 1 (Correct)**\n\nThe solution follows the problem requirements accurately, implementing all the necessary components and maintaining essential business rules. The logic is consistent and verifiable, leading to a correct evaluation.",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c014.json",
+            "question": "```envision\ntable Orders[Pid] = with\n  [| as Pid, as Date, as Quantity |]\n  [| \"apple\",  date(2020, 4, 15), 3 |]\n  [| \"pear\",  date(2020, 4, 16), 7 |]\n  [| \"orange\", date(2020, 4, 17), 2 |]\n```\nHow can I show the date of orange ?\n(You should first copy the code above)",
+            "question_type": "coding",
+            "ground_truth": "```envision\ntable Orders[Pid] = with\n  [| as Pid, as Date, as Quantity |]\n  [| \"apple\",  date(2020, 4, 15), 3 |]\n  [| \"pear\",  date(2020, 4, 16), 7 |]\n  [| \"orange\", date(2020, 4, 17), 2 |]\nshow scalar \"\" with Orders.Date[\"orange\"] // 'Apr 17, 2020'\n```",
+            "ref": [],
+            "compilation_result": {
+                "valid": true,
+                "messages": []
+            },
+            "compilation_attempts": 1,
+            "judgment": "correct",
+            "judge_output": "Step 1: **Logical Completeness**  \n- The solution correctly defines the table `Orders` with the specified columns.\n- It retrieves the date of the item \"orange\" from the `Orders` table.\n\nStep 2: **Logical Consistency**  \n- The data flow is self-consistent, with no contradictory conditionals present.\n\nStep 3: **Verifiability**  \n- The critical computation step of retrieving the date of \"orange\" is traceable.\n- The key parameter, \"orange,\" is configurable for retrieving different dates.\n\nTherefore, the final judgment is 1 (Correct)",
+            "judge_attempts": 1,
+            "final_state": "success"
+        },
+        {
+            "challenge_path": "c015.json",
+            "question": "What does the script below display?\n\n```envision\ntable Orders = with\n  [| as Date, as Quantity |]\n  [| date(2024, 1, 1), 3 |]\n  [| date(2024, 1, 3), 9 |]\n  [| date(2024, 1, 4), 5 |]\n  [| date(2024, 1, 2), 2 |]\n  [| date(2024, 1, 2), 6 |]\n  [| date(2024, 1, 5), 4 |]\n  [| date(2024, 1, 1), 6 |]\n  [| date(2024, 1, 4), 2 |]\n  [| date(2024, 1, 3), 7 |]\n  [| date(2024, 1, 3), 5 |]\n\nshow table \"Quantity per Day\" a1c6 with\n  sum(Orders.Quantity)\n  group by Orders.Date\n  order by [sum(Orders.Quantity)]\n```",
+            "question_type": "QA",
+            "ground_truth": "The table Orders contains 10 lines and 2 columns describing dates and quantity. \n\nThe instruction 'show table' displays a table which contains the sum of the quantities per day in the table Orders.\nThanks to the 'order by' instruction, the displayed table is sorted by increasing value.\n\nIn summary:\n\nThe script displays a table containing the sum of the quantities per day in the table Orders, sorted by increasing value.",
+            "ref": "",
+            "compilation_result": null,
+            "compilation_attempts": null,
+            "judgment": "correct",
+            "judge_output": "1. **Logical Completeness**  \nThe script correctly calculates the sum of quantities per day from the Orders table and displays it in a table. It also includes the necessary grouping by date and ordering by the sum of quantities.  \n   \n2. **Logical Consistency**  \nThe data flow architecture is self-consistent, with the sum of quantities being grouped by date and then ordered by the sum. There are no contradictory conditionals present.  \n\n3. **Verifiability**  \nThe critical computation steps of summing quantities per day, grouping by date, and ordering by the sum are traceable. The key parameter for ordering by the sum is also configurable.  \n\nBased on the evaluation against the provided criteria, the final judgment is 1 (Correct).",
+            "judge_attempts": 1,
+            "final_state": "success"
+        }
+    ]
+}
