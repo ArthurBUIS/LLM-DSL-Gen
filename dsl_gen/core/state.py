@@ -109,7 +109,7 @@ def visualize_state(state: RAGState) -> None:
             display(Markdown(f"**Reference Answer:** `{state['ref']}`"))
 
         # Display Retrieved Documents
-        if state.get('docs'):
+        """if state.get('docs'):
             display(Markdown("**Retrieved Documents:**"))
             for doc in state['docs']:
                 # Assuming each document has a `text` attribute for its content
@@ -117,12 +117,12 @@ def visualize_state(state: RAGState) -> None:
                 if hasattr(doc, 'page_content'):
                     display(Markdown(f"- `{doc.page_content[:200]}...`"))
                 else:
-                    display(Markdown(f"- `{doc['page_content'][:200]}...`"))
+                    display(Markdown(f"- `{doc['page_content'][:200]}...`"))"""
 
         # Display AI Raw Completion and Final Completion
-        if state.get('raw_completion'):
+        """if state.get('raw_completion'):
             display(
-                Markdown(f"**Raw Completion:** `{state['raw_completion']}`"))
+                Markdown(f"**Raw Completion:** `{state['raw_completion']}`"))"""
         if state.get('completion'):
             display(Markdown("**Final Completion:**\n\n```envision\n"
                              + state['completion'] + "\n```"))

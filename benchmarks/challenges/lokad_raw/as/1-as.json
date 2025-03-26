@@ -1,6 +1,6 @@
 {
-    "question": "Read the file “/clean/orders.ion” with the columns “OrderId”, “Qty” and “InitDate” and name it “OrdersTable”. Display the OrdersTable and rename the “InitDate” column to “Order Date”.",
-    "answer": "read \"/clean/orders.ion\" as OrdersTable with\n  OrderId : text\n  Qty : number\n  InitDate : date\n\nshow table \"OrdersTable\"  with\n  OrdersTable.OrderId\n  OrdersTable.Qty\n  OrdersTable.InitDate as \"Order Date\"",
+    "question": "Read the file \u201c/clean/orders.ion\u201d with the columns \u201cOrderId\u201d, \u201cQty\u201d and \u201cInitDate\u201d and name it \u201cOrdersTable\u201d. Display the OrdersTable and rename the \u201cInitDate\u201d column to \u201cOrder Date\u201d.",
+    "answer": "```envisionread \"/clean/orders.ion\" as OrdersTable with\n  OrderId : text\n  Qty : number\n  InitDate : date\n\nshow table \"OrdersTable\"  with\n  OrdersTable.OrderId\n  OrdersTable.Qty\n  OrdersTable.InitDate as \"Order Date\"```",
     "ref": "",
     "type": "coding"
 }
